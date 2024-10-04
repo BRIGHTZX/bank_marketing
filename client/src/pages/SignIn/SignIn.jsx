@@ -49,7 +49,7 @@ function SignIn() {
           icon: "success",
           title: data.message,
         });
-        navigate("/dashboard");
+        navigate("/Dashboard?tab=dashboard");
       }
     } catch (error) {
       setError("root", {

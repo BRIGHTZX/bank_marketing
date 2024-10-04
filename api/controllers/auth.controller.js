@@ -23,13 +23,16 @@ export const signup = async (req, res, next) => {
         id SERIAL PRIMARY KEY,
         username VARCHAR(255) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
-        password VARCHAR(255) NOT NULL
+        password VARCHAR(255) NOT NULL,
+        isadmin BOOLEAN NOT NULL DEFAULT false,
+        create_at TIMESTAMP DEFAULT NOW()
       )
     `);
 
-    const result = await pool.query("SELECT * FROM users WHERE email = $1", [
-      email,
-    ]);
+    const result = await pool.query(
+      "SELECT email FROM users WHERE email = $1",
+      [email]
+    );
     const existingUser = result.rows[0];
 
     if (existingUser) {
@@ -66,7 +69,6 @@ export const signin = async (req, res, next) => {
     ]);
 
     const User = result.rows[0];
-    console.log(User);
 
     if (!User) {
       return res.status(401).json({ message: "User not found" });
@@ -79,7 +81,7 @@ export const signin = async (req, res, next) => {
     }
 
     const token = await jwt.sign(
-      { email: User.email, username: User.username },
+      { id: User.id, isAdmin: User.isadmin },
       process.env.JWT_SECRET,
       {
         expiresIn: "2h",

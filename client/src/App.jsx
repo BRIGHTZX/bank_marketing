@@ -13,7 +13,7 @@ function App() {
           <Route path="/" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route element={<PrivateRoute />}>
-            <Route path="/dashboard" element={<MainDash />} />
+            <Route path="/Dashboard" element={<MainDash />} />
           </Route>
         </Routes>
       </BrowserRouter>

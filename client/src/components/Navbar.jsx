@@ -6,16 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { signOutSuccess } from "../redux/user/userSlice";
 
-function Navbar({ sidebarToggle, setSidebarToggle }) {
+function Navbar() {
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-
-  const ToggleHandle = () => {
-    setSidebarToggle((prevState) => !prevState);
-  };
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -53,17 +49,13 @@ function Navbar({ sidebarToggle, setSidebarToggle }) {
   });
 
   return (
-    <nav className="bg-black px-4 py-3 flex justify-between">
+    <nav className="px-4 py-3 flex justify-between w-full">
       {/* Left */}
       <div className="flex items-center text-xl">
-        <FaBars
-          className="text-white me-4 cursor-pointer"
-          onClick={ToggleHandle}
-        />
-        <span className="text-white font-semibold">Dashboard</span>
+        <span className="font-semibold">Dashboard</span>
       </div>
       {/* Right */}
-      <div className="text-white relative" ref={dropdownRef}>
+      <div className="relative" ref={dropdownRef}>
         {/* Dropdown */}
         <button onClick={toggleDropdown}>
           <p>{currentUser.username}</p>
