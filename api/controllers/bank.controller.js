@@ -3,7 +3,7 @@ import { PgConnect } from "../utils/config.js";
 export const getDatas = async (req, res, next) => {
   const pool = PgConnect();
   try {
-    const result = await pool.query("SELECT * FROM bank");
+    const result = await pool.query("SELECT * FROM bank ORDER BY age");
     const totalDatas = result.rowCount;
     const bankDatas = result.rows;
 

@@ -20,22 +20,35 @@ ChartJS.register(
   Legend
 );
 
-function LineChart({ data, category }) {
+function LineChart({ data }) {
   if (!data || data.length === 0) {
     return <p>No Data Available</p>;
   }
 
-  const age = ["10", "20", "40", "40", "50", "60", "70", "80", "90", "100"];
+  // ใช้ reduce เพื่อรวม balance ตาม age
+  const ageBalanceMap = data.reduce((acc, current) => {
+    const age = current.age;
+    const balance = current.balance;
 
-  const labels = age.map((age) => age);
-  const dataset = data.map((item) => item.balance);
-  // กำหนดสีสำหรับแต่ละแท่ง
+    if (!acc[age]) {
+      acc[age] = { totalBalance: 0, count: 0 };
+    }
+    acc[age].totalBalance += balance;
+    acc[age].count += 1;
+    return acc;
+  }, {});
+
+  // สร้าง labels และ dataset ใหม่จาก ageBalanceMap
+  const labels = Object.keys(ageBalanceMap);
+  const dataset = labels.map(
+    (age) => ageBalanceMap[age].totalBalance / ageBalanceMap[age].count
+  );
 
   const chartData = {
     labels: labels,
     datasets: [
       {
-        label: "จำนวนคนต่ออาชีพ",
+        label: "ค่าเฉลี่ย Balance ตามอายุ",
         data: dataset,
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
