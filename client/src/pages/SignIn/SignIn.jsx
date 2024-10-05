@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { z } from "zod";
-import Swal from "sweetalert2";
+import { fireToast } from "../../components/Toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch } from "react-redux";
@@ -45,10 +45,7 @@ function SignIn() {
       const data = res.data;
       if (res.status >= 200 && res.status < 300) {
         dispatch(signInSuccess(data.user));
-        Toast.fire({
-          icon: "success",
-          title: data.message,
-        });
+        fireToast("success", data.message);
         navigate("/Dashboard?tab=dashboard");
       }
     } catch (error) {
@@ -57,18 +54,6 @@ function SignIn() {
       });
     }
   };
-
-  const Toast = Swal.mixin({
-    toast: true,
-    position: "top-start",
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-      toast.onmouseenter = Swal.stopTimer;
-      toast.onmouseleave = Swal.resumeTimer;
-    },
-  });
 
   return (
     <div className="h-screen w-full flex">

@@ -20,7 +20,7 @@ function MainDash() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="w-full h-screen overflow-hidden">
+      <div className="w-full h-screen overflow-auto">
         <Navbar />
         {/* Dashboard */}
         {tab === "dashboard" && <Dashboard />}

@@ -1,17 +1,14 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-
+import { fireToast } from "./Toast";
 // icon
 import { BiArrowFromRight } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
-import { IoSettingsOutline } from "react-icons/io5";
 import { RiLogoutBoxFill } from "react-icons/ri";
 import { HiOutlineUserGroup } from "react-icons/hi";
 import { BsFilePost } from "react-icons/bs";
-import { HiChartPie } from "react-icons/hi";
-import { LiaCommentSolid } from "react-icons/lia";
 
 import { useSelector } from "react-redux";
 import { FaBars } from "react-icons/fa";
@@ -19,6 +16,7 @@ import { FaBars } from "react-icons/fa";
 const SidebarContext = createContext();
 
 export default function Sidebar() {
+  const navigate = useNavigate();
   const currentUser = useSelector((state) => state.user.currentUser);
 
   const [expanded, setExpanded] = useState(false);
@@ -33,12 +31,17 @@ export default function Sidebar() {
   }, [location.search]);
 
   const handleSignout = async () => {
+    console.log("object");
     try {
-      const res = await axios.post("/api/user/signout");
+      const res = await axios.post("/api/auth/signout");
+      const data = res.data;
 
-      console.log(res.data); // Debugging line
+      if (res.status >= 200 && res.status < 300) {
+        fireToast("success", data.message);
+        navigate("/");
+      }
     } catch (error) {
-      console.log("Error during signout:", error.message);
+      console.log(error);
     }
   };
 
@@ -97,12 +100,13 @@ export default function Sidebar() {
               )}
             </div>
             <hr />
-            <SidebarItem
-              className="flex-grow"
-              icon={<RiLogoutBoxFill />}
-              text="Signout"
-              onClick={handleSignout} // Make sure this is a button element
-            />
+            <button onClick={handleSignout}>
+              <SidebarItem
+                className="flex-grow"
+                icon={<RiLogoutBoxFill />}
+                text="Signout"
+              />
+            </button>
           </ul>
         </SidebarContext.Provider>
       </nav>

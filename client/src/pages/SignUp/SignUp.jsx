@@ -3,7 +3,7 @@ import axios from "axios";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Swal from "sweetalert2";
+import { fireToast } from "../../components/Toast";
 
 const schema = z.object({
   username: z
@@ -45,10 +45,7 @@ function SignUp() {
 
       reset();
 
-      Toast.fire({
-        icon: "success",
-        title: data.message,
-      });
+      fireToast("success", data.message);
 
       navigate("/");
     } catch (error) {
@@ -57,18 +54,6 @@ function SignUp() {
       });
     }
   };
-
-  const Toast = Swal.mixin({
-    toast: true,
-    position: "top-start",
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-      toast.onmouseenter = Swal.stopTimer;
-      toast.onmouseleave = Swal.resumeTimer;
-    },
-  });
 
   return (
     <div className="h-screen w-full flex">

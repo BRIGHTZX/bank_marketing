@@ -20,5 +20,7 @@ export const getUsers = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  } finally {
+    pool.end();
   }
 };

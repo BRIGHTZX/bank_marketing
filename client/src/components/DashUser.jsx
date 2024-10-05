@@ -6,8 +6,6 @@ function DashUser() {
   const { currentUser } = useSelector((state) => state.user);
   const [users, setUsers] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
-  console.log(totalUsers);
-  console.log(users);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -19,7 +17,6 @@ function DashUser() {
           setUsers(data.users);
           setTotalUsers(data.totalUsers);
         }
-        console.log(data);
       } catch (error) {
         console.log(error);
       }
@@ -41,7 +38,9 @@ function DashUser() {
     <div className="w-full h-screen bg-gray-500">
       {currentUser.isadmin && users.length > 0 ? (
         <>
-          <div className="w-80 h-40 rounded-xl bg-white ">count</div>
+          <div className="w-80 h-40 rounded-xl bg-white ">
+            count : {totalUsers}
+          </div>
           <div>
             <table>
               <thead>

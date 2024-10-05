@@ -1,8 +1,8 @@
 import express from "express";
-import { getdatas } from "../controllers/bank.controller.js";
+import { getDatas } from "../controllers/bank.controller.js";
 
 const router = express.Router();
 
-router.get("/getdatas", getdatas);
+router.get("/getDatas", getDatas);
 
 export default router;

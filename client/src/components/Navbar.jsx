@@ -1,6 +1,5 @@
-import { FaBars } from "react-icons/fa";
 import axios from "axios";
-import Swal from "sweetalert2";
+import { fireToast } from "./Toast";
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,10 +22,7 @@ function Navbar() {
       const data = res.data;
 
       if (res.status >= 200 && res.status < 300) {
-        Toast.fire({
-          icon: "success",
-          title: data.message,
-        });
+        fireToast("success", data.message);
         setDropdownOpen(false);
         dispatch(signOutSuccess());
         navigate("/");
@@ -36,20 +32,8 @@ function Navbar() {
     }
   };
 
-  const Toast = Swal.mixin({
-    toast: true,
-    position: "top-start",
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-      toast.onmouseenter = Swal.stopTimer;
-      toast.onmouseleave = Swal.resumeTimer;
-    },
-  });
-
   return (
-    <nav className="px-4 py-3 flex justify-between w-full">
+    <nav className="px-4 py-3 flex justify-between w-full border-b">
       {/* Left */}
       <div className="flex items-center text-xl">
         <span className="font-semibold">Dashboard</span>
