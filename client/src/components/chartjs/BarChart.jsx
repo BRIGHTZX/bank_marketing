@@ -6,19 +6,20 @@ import {
   Title,
   Tooltip,
   Legend,
+  Filler, // Import Filler
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 
-// Register components ของ Chart.js
+// Register components ของ Chart.js รวมถึง Filler ด้วย
 ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  Filler // Register Filler
 );
-
 function BarChart({ data, category }) {
   if (!data || data.length === 0) {
     return <p>No Data Available</p>;
