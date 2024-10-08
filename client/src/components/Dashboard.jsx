@@ -71,7 +71,8 @@ function Dashboard() {
       }
 
       try {
-        const searchQuery = urlParams.toString();
+        // เพิ่ม limit เป็นพารามิเตอร์ใน query string
+        const searchQuery = urlParams.toString() + `&limit=${rowsToShow}`;
         const res = await axios.get(`api/bank/getDatas?${searchQuery}`);
         const data = res.data;
         if (res.status >= 200 && res.status < 300) {
@@ -84,7 +85,6 @@ function Dashboard() {
           }, 0);
 
           const formattedBalance = totalBalance.toLocaleString();
-
           setTotalBalance(formattedBalance);
         }
       } catch (error) {
@@ -95,7 +95,7 @@ function Dashboard() {
     };
 
     fetchDatas();
-  }, [location.search]);
+  }, [location.search, rowsToShow]); // เพิ่ม rowsToShow ใน dependencies
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -124,22 +124,6 @@ function Dashboard() {
   const handleRowsChange = (event) => {
     setRowsToShow(Number(event.target.value));
   };
-
-  useEffect(() => {
-    const fetchTableData = async () => {
-      try {
-        const res = await axios.get(`/api/bank/getDatas?limit=${rowsToShow}`);
-        const data = res.data;
-        if (res.status >= 200 && res.status < 300) {
-          setTableData(data.previewDatas);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchTableData();
-  }, [rowsToShow]);
 
   return (
     <main>
