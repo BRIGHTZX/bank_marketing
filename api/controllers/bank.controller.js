@@ -8,9 +8,9 @@ export const getDatas = async (req, res, next) => {
   try {
     const sortDirection = req.query.sort === "asc" ? "ASC" : "DESC";
     const month = req.query.month;
-    const limit = parseInt(req.query.limit) || 10; // ค่าที่รับมาจาก frontend เช่น Top 10, 50, 100
+    const limit = parseInt(req.query.limit) || 10; // ค่าเริ่มต้นสำหรับ LIMIT
     let query = `SELECT * FROM bank`;
-    let queryParams = []; // ไว้แทนค่า $1, $2
+    let queryParams = []; // ใช้สำหรับแทนค่า $1, $2
 
     // กรองข้อมูลตามเดือน
     if (month && month !== "all") {
@@ -19,14 +19,17 @@ export const getDatas = async (req, res, next) => {
     }
 
     // กรองข้อมูลตามช่วงอายุ
-    if (req.query.ageRange) {
+    if (req.query.ageRange && req.query.ageRange !== "all") {
       const [minAge, maxAge] = req.query.ageRange.split("-");
       if (queryParams.length > 0) {
-        query += ` AND age BETWEEN $2 AND $3`;
+        query += ` AND age BETWEEN $${queryParams.length + 1} AND $${
+          queryParams.length + 2
+        }`; // ใช้เลขดัชนีสำหรับพารามิเตอร์
+        queryParams.push(minAge, maxAge);
       } else {
-        query += ` WHERE age BETWEEN $1 AND $2`;
+        query += ` WHERE age BETWEEN $1 AND $2`; // สำหรับกรณีที่ไม่มีเงื่อนไขอื่นก่อนหน้า
+        queryParams.push(minAge, maxAge);
       }
-      queryParams.push(minAge, maxAge);
     }
 
     // เรียงลำดับข้อมูลตาม id
@@ -47,8 +50,8 @@ export const getDatas = async (req, res, next) => {
     // ส่งข้อมูลทั้งหมดและข้อมูลที่จำกัดจำนวนกลับไปยัง client
     res.status(200).json({
       totalDatas: totalDatas,
-      bankDatas: bankDatas, // ข้อมูลทั้งหมด
-      previewDatas: previewDatas, // ข้อมูลตัวอย่าง (ตาม LIMIT)
+      bankDatas: bankDatas,
+      previewDatas: previewDatas,
     });
   } catch (error) {
     next(error);

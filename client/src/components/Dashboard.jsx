@@ -77,6 +77,7 @@ function Dashboard() {
         if (res.status >= 200 && res.status < 300) {
           setDatas(data.bankDatas);
           setTotalUsers(data.totalDatas);
+          setTableData(data.previewDatas);
 
           const totalBalance = data.bankDatas.reduce((acc, current) => {
             return acc + current.balance;
