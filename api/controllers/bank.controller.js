@@ -8,7 +8,7 @@ export const getDatas = async (req, res, next) => {
   try {
     const sortDirection = req.query.sort === "asc" ? "ASC" : "DESC";
     const month = req.query.month;
-    const limit = parseInt(req.query.limit) || 10; // ค่าเริ่มต้นสำหรับ LIMIT
+    const limit = parseInt(req.query.limit) || 10;
     let query = `SELECT * FROM bank`;
     let queryParams = []; // ใช้สำหรับแทนค่า $1, $2
 
@@ -52,6 +52,43 @@ export const getDatas = async (req, res, next) => {
       totalDatas: totalDatas,
       bankDatas: bankDatas,
       previewDatas: previewDatas,
+    });
+  } catch (error) {
+    next(error);
+  } finally {
+    await pool.end();
+  }
+};
+
+export const getDetails = async (req, res, next) => {
+  console.log(req.query);
+
+  const pool = PgConnect();
+
+  try {
+    let label = req.query.label;
+
+    let query = `SELECT * FROM bank`;
+    let queryParams = [];
+
+    if (label) {
+      label = label.toLowerCase();
+      query += ` WHERE job = $1`;
+      queryParams.push(label);
+    }
+
+    query += ` ORDER BY id`;
+
+    const fullResult = await pool.query(query, queryParams);
+
+    const totalDatas = fullResult.rowCount;
+    const bankDatas = fullResult.rows; // ข้อมูลทั้งหมด
+
+    res.status(200).json({
+      message: "ok",
+      totalDatas: totalDatas,
+      bankDatas: bankDatas,
+      label: label,
     });
   } catch (error) {
     next(error);

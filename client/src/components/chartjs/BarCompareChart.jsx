@@ -19,15 +19,15 @@ ChartJS.register(
   Legend
 );
 
-function BarCompareChart({ data }) {
+function BarCompareChart({ data, category, option }) {
   if (!data || data.length === 0) {
     return <p>No Data Available</p>;
   }
 
   // จัดกลุ่มตามอาชีพ (job) และคำนวณ balance เฉลี่ยของแต่ละอาชีพ
   const jobData = data.reduce((acc, current) => {
-    const job = current.job;
-    const balance = current.balance;
+    const job = current[category[0]];
+    const balance = current[category[1]];
 
     // ตรวจสอบว่ามี key อาชีพใน object สะสมหรือยัง
     if (!acc[job]) {
@@ -75,7 +75,22 @@ function BarCompareChart({ data }) {
     ],
   };
 
-  return <Bar data={chartData} />;
+  const options = {
+    indexAxis: option === "horizontal" ? "y" : "x", // เปลี่ยนแนวแกนตาม prop
+    scales: {
+      x: {
+        beginAtZero: true, // เริ่มที่ 0
+      },
+      y: {
+        title: {
+          display: true,
+          text: category[0] === "age" ? "อายุ" : "อาชีพ", // ชื่อแกน Y ขึ้นอยู่กับ category
+        },
+      },
+    },
+  };
+
+  return <Bar data={chartData} options={options} />;
 }
 
 export default BarCompareChart;

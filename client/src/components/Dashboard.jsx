@@ -41,11 +41,10 @@ function Dashboard() {
   const navigate = useNavigate();
 
   const [search, setSearch] = useState({
-    sort: "asc",
+    sort: "desc",
     month: "all",
     ageRange: "all",
   });
-  console.log(search);
 
   const [datas, setDatas] = useState([]);
   const [totalUsers, setTotalUsers] = useState(null);
@@ -53,6 +52,8 @@ function Dashboard() {
   const [rowsToShow, setRowsToShow] = useState(10);
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  console.log(tableData);
 
   useEffect(() => {
     const fetchDatas = async () => {
@@ -174,8 +175,8 @@ function Dashboard() {
                   value={search.sort}
                   onChange={(e) => handleChange(e)} // ส่งอีเวนต์เข้าไปตรงๆ
                 >
-                  <option value="asc">ASC</option>
-                  <option value="desc">DESC</option>
+                  <option value="desc">Lastest</option>
+                  <option value="asc">Oldest</option>
                 </select>
 
                 <label htmlFor="month-filter" className="mr-4">
@@ -233,7 +234,11 @@ function Dashboard() {
             <section className="col-span-2  p-2 shadow-md border rounded-xl mt-4">
               <div className="h-full w-full text-center">
                 <h1 className="text-5xl font-bold my-4">job - balance</h1>
-                <BarCompareChart data={datas} />
+                <BarCompareChart
+                  data={datas}
+                  category={["job", "balance"]}
+                  option="horizontal"
+                />
               </div>
             </section>
 
