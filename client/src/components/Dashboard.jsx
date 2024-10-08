@@ -24,6 +24,18 @@ const months = [
   { full: "December", short: "dec" },
 ];
 
+const ageRanges = [
+  { label: "All", value: "all" },
+  { label: "18-29", value: "18-29" },
+  { label: "30-39", value: "30-39" },
+  { label: "40-49", value: "40-49" },
+  { label: "50-59", value: "50-59" },
+  { label: "60-69", value: "60-69" },
+  { label: "70-79", value: "70-79" },
+  { label: "80-89", value: "80-89" },
+  { label: "90-100", value: "90-100" },
+];
+
 function Dashboard() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -31,13 +43,15 @@ function Dashboard() {
   const [search, setSearch] = useState({
     sort: "asc",
     month: "all",
+    ageRange: "all",
   });
   console.log(search);
 
   const [datas, setDatas] = useState([]);
   const [totalUsers, setTotalUsers] = useState(null);
   const [totalBalance, setTotalBalance] = useState(null);
-  const [previewDatas, setPreviewDatas] = useState(null);
+  const [rowsToShow, setRowsToShow] = useState(10);
+  const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -45,12 +59,14 @@ function Dashboard() {
       const urlParams = new URLSearchParams(location.search);
       const sortFromUrl = urlParams.get("sort") || search.sort; // ใช้ค่า sort ที่มาจาก URL หรือ search.sort
       const monthFromUrl = urlParams.get("month") || search.month;
+      const ageRangeFromUrl = urlParams.get("ageRange") || search.ageRange;
 
-      if (sortFromUrl || monthFromUrl) {
+      if (sortFromUrl || monthFromUrl || ageRangeFromUrl) {
         setSearch({
           ...search,
           sort: sortFromUrl,
           month: monthFromUrl,
+          ageRange: ageRangeFromUrl,
         });
       }
 
@@ -61,7 +77,6 @@ function Dashboard() {
         if (res.status >= 200 && res.status < 300) {
           setDatas(data.bankDatas);
           setTotalUsers(data.totalDatas);
-          setPreviewDatas(data.previewDatas);
 
           const totalBalance = data.bankDatas.reduce((acc, current) => {
             return acc + current.balance;
@@ -96,6 +111,7 @@ function Dashboard() {
     // ตั้งค่าให้ใช้การจัดเรียงจาก search.sort
     urlParams.set("sort", search.sort);
     urlParams.set("month", search.month);
+    urlParams.set("ageRange", search.ageRange);
 
     const searchQuery = urlParams.toString();
 
@@ -103,6 +119,26 @@ function Dashboard() {
     navigate(`/Dashboard?${searchQuery}`);
     setLoading(false);
   };
+
+  const handleRowsChange = (event) => {
+    setRowsToShow(Number(event.target.value));
+  };
+
+  useEffect(() => {
+    const fetchTableData = async () => {
+      try {
+        const res = await axios.get(`/api/bank/getDatas?limit=${rowsToShow}`);
+        const data = res.data;
+        if (res.status >= 200 && res.status < 300) {
+          setTableData(data.previewDatas);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchTableData();
+  }, [rowsToShow]);
 
   return (
     <main>
@@ -145,7 +181,6 @@ function Dashboard() {
           </section>
           {/* Section 1: JOB */}
 
-          {/* Section 2: Marital */}
           <section className="col-span-2 grid grid-cols-2 pr-4">
             <section className="col-span-2 h-[180px] p-4">
               <form onSubmit={handleSubmit}>
@@ -173,6 +208,20 @@ function Dashboard() {
                     </option>
                   ))}
                 </select>
+
+                <select
+                  id="ageRange"
+                  value={search.ageRange}
+                  onChange={(e) => handleChange(e)}
+                >
+                  <option value="">Select Age Range</option>
+                  {ageRanges.map((range) => (
+                    <option key={range.value} value={range.value}>
+                      {range.label}
+                    </option>
+                  ))}
+                </select>
+
                 <button type="submit">Submit</button>
               </form>
             </section>
@@ -212,7 +261,20 @@ function Dashboard() {
           </section>
 
           <section className="col-span-5 p-4">
-            <div className="overflow-x-auto">
+            <label htmlFor="rowsSelect" className="mr-2">
+              Show rows:{" "}
+            </label>
+            <select
+              id="rowsSelect"
+              value={rowsToShow}
+              onChange={handleRowsChange}
+              className="border p-2"
+            >
+              <option value={10}>Top 10</option>
+              <option value={50}>Top 50</option>
+              <option value={100}>Top 100</option>
+            </select>
+            <div className="overflow-x-auto h-[500px]">
               <table className="min-w-full border border-gray-300">
                 <thead className="bg-gray-100">
                   <tr>
@@ -237,8 +299,8 @@ function Dashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {Array.isArray(previewDatas) && previewDatas.length > 0 ? (
-                    previewDatas.map((data) => (
+                  {Array.isArray(tableData) && tableData.length > 0 ? (
+                    tableData.map((data) => (
                       <tr
                         key={data.id}
                         className="hover:bg-gray-50 text-center"

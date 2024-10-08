@@ -38,7 +38,6 @@ function LineChart({ data }) {
     return acc;
   }, {});
 
-  // สร้าง labels และ dataset ใหม่จาก ageBalanceMap
   const labels = Object.keys(ageBalanceMap);
   const dataset = labels.map(
     (age) => ageBalanceMap[age].totalBalance / ageBalanceMap[age].count
