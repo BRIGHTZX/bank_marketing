@@ -9,7 +9,10 @@ export const getDatas = async (req, res, next) => {
     const sortDirection = req.query.sort === "asc" ? "ASC" : "DESC";
     const month = req.query.month;
     const limit = parseInt(req.query.limit) || 10;
-    let query = `SELECT * FROM bank`;
+    let query = `SELECT b.id, b.age, b.job, b.marital, b.education, b.balance, b.housing, b.loan, b.day, b.month, u.name, u.email
+    FROM bank b
+    JOIN bank_user u ON b.id = u.bank_id`;
+
     let queryParams = []; // ใช้สำหรับแทนค่า $1, $2
 
     // กรองข้อมูลตามเดือน
@@ -46,6 +49,7 @@ export const getDatas = async (req, res, next) => {
     const totalDatas = fullResult.rowCount;
     const bankDatas = fullResult.rows; // ข้อมูลทั้งหมด
     const previewDatas = previewResult.rows; // ข้อมูลที่จำกัดตาม LIMIT
+    console.log(previewDatas);
 
     // ส่งข้อมูลทั้งหมดและข้อมูลที่จำกัดจำนวนกลับไปยัง client
     res.status(200).json({

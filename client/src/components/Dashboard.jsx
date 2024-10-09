@@ -268,24 +268,18 @@ function Dashboard() {
               <table className="min-w-full border border-gray-300">
                 <thead className="bg-gray-100">
                   <tr>
-                    <th className="px-4 py-2 border-b">ID</th>
+                    <th className="px-4 py-2 border-b">Bank_ID</th>
+                    <th className="px-4 py-2 border-b">Name</th>
+                    <th className="px-4 py-2 border-b">Email</th>
                     <th className="px-4 py-2 border-b">Age</th>
                     <th className="px-4 py-2 border-b">Job</th>
                     <th className="px-4 py-2 border-b">Marital</th>
                     <th className="px-4 py-2 border-b">Education</th>
-                    <th className="px-4 py-2 border-b">Default</th>
                     <th className="px-4 py-2 border-b">Balance</th>
                     <th className="px-4 py-2 border-b">Housing</th>
                     <th className="px-4 py-2 border-b">Loan</th>
-                    <th className="px-4 py-2 border-b">Contact</th>
                     <th className="px-4 py-2 border-b">Day</th>
                     <th className="px-4 py-2 border-b">Month</th>
-                    <th className="px-4 py-2 border-b">Duration</th>
-                    <th className="px-4 py-2 border-b">Campaign</th>
-                    <th className="px-4 py-2 border-b">Pdays</th>
-                    <th className="px-4 py-2 border-b">Previous</th>
-                    <th className="px-4 py-2 border-b">Poutcome</th>
-                    <th className="px-4 py-2 border-b">Y</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -296,23 +290,17 @@ function Dashboard() {
                         className="hover:bg-gray-50 text-center"
                       >
                         <td className="px-4 py-2 border-b">{data.id}</td>
+                        <td className="px-4 py-2 border-b">{data.name}</td>
+                        <td className="px-4 py-2 border-b">{data.email}</td>
                         <td className="px-4 py-2 border-b">{data.age}</td>
                         <td className="px-4 py-2 border-b">{data.job}</td>
                         <td className="px-4 py-2 border-b">{data.marital}</td>
                         <td className="px-4 py-2 border-b">{data.education}</td>
-                        <td className="px-4 py-2 border-b">{data.default}</td>
                         <td className="px-4 py-2 border-b">{data.balance}</td>
                         <td className="px-4 py-2 border-b">{data.housing}</td>
                         <td className="px-4 py-2 border-b">{data.loan}</td>
-                        <td className="px-4 py-2 border-b">{data.contact}</td>
                         <td className="px-4 py-2 border-b">{data.day}</td>
                         <td className="px-4 py-2 border-b">{data.month}</td>
-                        <td className="px-4 py-2 border-b">{data.duration}</td>
-                        <td className="px-4 py-2 border-b">{data.campaign}</td>
-                        <td className="px-4 py-2 border-b">{data.pdays}</td>
-                        <td className="px-4 py-2 border-b">{data.previous}</td>
-                        <td className="px-4 py-2 border-b">{data.poutcome}</td>
-                        <td className="px-4 py-2 border-b">{data.y}</td>
                       </tr>
                     ))
                   ) : (

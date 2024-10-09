@@ -137,7 +137,7 @@ function Detail() {
           </article>
           <article className="flex-1 shadow-md border rounded-xl">
             <div className="h-full w-full text-center">
-              <h1 className="text-5xl font-bold my-4">Age-balance</h1>
+              <h1 className="text-5xl font-bold my-4">Age</h1>
               <BarChart data={datas} category="age" />
             </div>
           </article>
