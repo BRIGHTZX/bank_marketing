@@ -5,6 +5,7 @@ import Navbar from "../../components/Navbar";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Detail from "../../components/Detail";
+import Create from "../Create/Create";
 
 function MainDash() {
   const location = useLocation();
@@ -28,6 +29,7 @@ function MainDash() {
         {tab === "detail" && <Detail />}
 
         {/* Admin */}
+        {tab === "posts" && <Create />}
         {tab === "users" && <DashUser />}
       </div>
     </div>

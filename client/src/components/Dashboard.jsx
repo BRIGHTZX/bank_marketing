@@ -271,6 +271,7 @@ function Dashboard() {
                     <th className="px-4 py-2 border-b">Bank_ID</th>
                     <th className="px-4 py-2 border-b">Name</th>
                     <th className="px-4 py-2 border-b">Email</th>
+                    <th className="px-4 py-2 border-b">Gender</th>
                     <th className="px-4 py-2 border-b">Age</th>
                     <th className="px-4 py-2 border-b">Job</th>
                     <th className="px-4 py-2 border-b">Marital</th>
@@ -292,6 +293,7 @@ function Dashboard() {
                         <td className="px-4 py-2 border-b">{data.id}</td>
                         <td className="px-4 py-2 border-b">{data.name}</td>
                         <td className="px-4 py-2 border-b">{data.email}</td>
+                        <td className="px-4 py-2 border-b">{data.gender}</td>
                         <td className="px-4 py-2 border-b">{data.age}</td>
                         <td className="px-4 py-2 border-b">{data.job}</td>
                         <td className="px-4 py-2 border-b">{data.marital}</td>

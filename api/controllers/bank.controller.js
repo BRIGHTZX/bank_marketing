@@ -9,9 +9,9 @@ export const getDatas = async (req, res, next) => {
     const sortDirection = req.query.sort === "asc" ? "ASC" : "DESC";
     const month = req.query.month;
     const limit = parseInt(req.query.limit) || 10;
-    let query = `SELECT b.id, b.age, b.job, b.marital, b.education, b.balance, b.housing, b.loan, b.day, b.month, u.name, u.email
+    let query = `SELECT b.id, b.age, b.job, b.marital, b.education, b.balance, b.housing, b.loan, b.day, b.month, c.name, c.email, c.gender
     FROM bank b
-    JOIN bank_user u ON b.id = u.bank_id`;
+    JOIN bank_customer c ON b.id = c.bank_id`;
 
     let queryParams = []; // ใช้สำหรับแทนค่า $1, $2
 
