@@ -100,3 +100,7 @@ export const getDetails = async (req, res, next) => {
     await pool.end();
   }
 };
+
+export const createData = async (req, res, next) => {
+  console.log(req.body);
+};
