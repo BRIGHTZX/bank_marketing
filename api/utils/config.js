@@ -22,5 +22,5 @@ export const PgConnect = () => {
       console.error("Database connection error:", err);
     });
 
-  return pool; // ส่งคืน pool ที่เชื่อมต่อแล้ว
+  return pool;
 };

@@ -82,7 +82,7 @@ export default function Sidebar() {
               <hr />
               {currentUser.isadmin === true && (
                 <>
-                  <Link to="/Dashboard?tab=posts">
+                  <Link to="/Dashboard?tab=add_infomation">
                     <SidebarItem
                       icon={<BsFilePost />}
                       text="Add"

@@ -1,4 +1,5 @@
 import { PgConnect } from "../utils/config.js";
+import errorHandler from "../utils/error.js";
 
 export const getDatas = async (req, res, next) => {
   console.log(req.query);
@@ -10,7 +11,7 @@ export const getDatas = async (req, res, next) => {
     const month = req.query.month;
     const limit = parseInt(req.query.limit) || 10;
     let query = `SELECT b.id, b.age, b.job, b.marital, b.education, b.balance, b.housing, b.loan, b.day, b.month, c.name, c.email, c.gender
-    FROM bank b
+    FROM bank_info b
     JOIN bank_customer c ON b.id = c.bank_id`;
 
     let queryParams = []; // ใช้สำหรับแทนค่า $1, $2
@@ -72,7 +73,7 @@ export const getDetails = async (req, res, next) => {
   try {
     let label = req.query.label;
 
-    let query = `SELECT * FROM bank`;
+    let query = `SELECT * FROM bank_info`;
     let queryParams = [];
 
     if (label) {
@@ -103,4 +104,169 @@ export const getDetails = async (req, res, next) => {
 
 export const createData = async (req, res, next) => {
   console.log(req.body);
+
+  let {
+    firstname,
+    lastname,
+    email,
+    gender,
+    age,
+    job,
+    otherJob,
+    marital,
+    education,
+    balance,
+    housing,
+    loan,
+    defaultCredit,
+    contact_type,
+    duration,
+    pdays,
+    campaign,
+    pcontact,
+    poutcome,
+    deposit,
+  } = req.body;
+
+  // Trim whitespace for all string fields
+  firstname = firstname?.trim();
+  lastname = lastname?.trim();
+  email = email?.trim();
+  otherJob = otherJob?.trim();
+  marital = marital?.trim();
+  education = education?.trim();
+
+  age = Number(age);
+  balance = Number(balance);
+  duration = Number(duration);
+  campaign = Number(campaign);
+  pcontact = Number(pcontact);
+  poutcome = Number(poutcome);
+
+  // ตรวจสอบค่าที่จำเป็น
+  if (
+    !firstname ||
+    !lastname ||
+    !email ||
+    !gender ||
+    !age ||
+    isNaN(age) ||
+    !job ||
+    !otherJob ||
+    !marital ||
+    !education ||
+    !balance ||
+    isNaN(balance) ||
+    !housing ||
+    !loan ||
+    !defaultCredit ||
+    !contact_type ||
+    isNaN(pdays) ||
+    isNaN(duration) ||
+    isNaN(campaign) ||
+    isNaN(pcontact) ||
+    isNaN(poutcome) ||
+    !deposit
+  ) {
+    return next(errorHandler(400, "All fields are required"));
+  }
+
+  const fullName = firstname + " " + lastname;
+
+  if (job === "other") {
+    job = otherJob.toLowerCase();
+  }
+
+  //set poutcome
+  poutcome = String(poutcome);
+  //set Date
+  const nowDate = new Date();
+  const day = nowDate.getDate();
+  let month = nowDate.getMonth() + 1;
+
+  switch (month) {
+    case 1:
+      month = "jan";
+      break;
+    case 2:
+      month = "feb";
+      break;
+    case 3:
+      month = "mar";
+      break;
+    case 4:
+      month = "apr";
+      break;
+    case 5:
+      month = "may";
+      break;
+    case 6:
+      month = "jun";
+      break;
+    case 7:
+      month = "jul";
+      break;
+    case 8:
+      month = "aug";
+      break;
+    case 9:
+      month = "sep";
+      break;
+    case 10:
+      month = "oct";
+      break;
+    case 11:
+      month = "nov";
+      break;
+    case 12:
+      month = "dec";
+      break;
+    default:
+      month = "Invalid month";
+  }
+
+  let pool = await PgConnect();
+
+  try {
+    await pool.query(`BEGIN`);
+
+    const bankResult = await pool.query(
+      `INSERT INTO bank_info (age, job, marital, education, "default", balance, housing, loan, contact, day, month, duration, campaign, pdays, previous, poutcome, y) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING id`,
+      [
+        age,
+        job,
+        marital,
+        education,
+        defaultCredit,
+        balance,
+        housing,
+        loan,
+        contact_type,
+        day,
+        month,
+        duration,
+        campaign,
+        pdays,
+        pcontact,
+        poutcome,
+        deposit,
+      ]
+    );
+
+    const bankId = bankResult.rows[0].id;
+
+    await pool.query(
+      "INSERT INTO bank_customer (name, email, gender, bank_id) VALUES ($1, $2, $3, $4)",
+      [fullName, email, gender, bankId]
+    );
+
+    await pool.query("COMMIT");
+
+    res.status(201).json({ message: "Data created successfully" });
+  } catch (error) {
+    await pool.query("ROLLBACK"); // Rollback transaction หากเกิดข้อผิดพลาด
+    next(errorHandler(500, error));
+  } finally {
+    pool.end();
+  }
 };

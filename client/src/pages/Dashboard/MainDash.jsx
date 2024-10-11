@@ -29,7 +29,7 @@ function MainDash() {
         {tab === "detail" && <Detail />}
 
         {/* Admin */}
-        {tab === "posts" && <Create />}
+        {tab === "add_infomation" && <Create />}
         {tab === "users" && <DashUser />}
       </div>
     </div>

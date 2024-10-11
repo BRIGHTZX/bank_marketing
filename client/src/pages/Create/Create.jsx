@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import { z } from "zod";
 
 const age = [];
@@ -11,83 +12,99 @@ for (let i = 18; i <= 100; i++) {
 }
 
 const schema = z.object({
-  firstname: z.string(),
-  lastname: z.string(),
+  firstname: z.string().min(1, { message: "Firstname is required" }),
+  lastname: z.string().min(1, { message: "Lastname is required" }),
   email: z.string().email({ message: "Email must be example@example.com" }),
-  gender: z.string(),
-  age: z.number(),
-  job: z.string(),
-  marital: z.string(),
-  education: z.string(),
-  contact_type: z.string().optional(),
-  last_contact: z.preprocess(
-    (val) => {
-      // ถ้าค่าที่กรอกเป็นค่าว่าง จะส่งกลับ undefined
-      if (val === "") {
-        return undefined; // อนุญาตให้เป็นค่าว่าง
-      }
-      return new Date(val);
-    },
-    z.date().optional() // ให้สามารถเป็นวันที่หรือเป็น null ได้
+  gender: z.string().min(1, { message: "Gender is required" }),
+  age: z.preprocess(
+    (val) => Number(val),
+    z.number().positive({ message: "Please select your age" })
   ),
-  duration: z.number().optional(),
-  campaign: z.number().optional(),
-  pcontact: z.number().optional(),
-  poutcome: z.number().optional(),
-  deposit: z.string().optional(),
+  job: z.string().min(1, { message: "Please select your job" }),
+  marital: z.string().min(1, { message: "Marital status is required" }),
+  education: z.string().min(1, { message: "Please select your education" }),
+  balance: z.preprocess(
+    (val) => (val === "" || val === undefined ? undefined : Number(val)),
+    z.number({ message: "Balance is required" })
+  ),
+  housing: z.enum(["true", "false"], {
+    errorMap: () => ({ message: "Housing is required" }),
+  }),
+  loan: z.enum(["true", "false"], {
+    errorMap: () => ({ message: "Loan is required" }),
+  }),
+  defaultCredit: z.enum(["true", "false"], {
+    errorMap: () => ({ message: "credit is required" }),
+  }),
+  pdays: z.preprocess(
+    (val) => Number(val),
+    z.number().positive({ message: "pdays must be greater than 0" })
+  ),
+  contact_type: z.string().min(1, { message: "Select Contact Type" }),
+  duration: z.preprocess(
+    (val) => Number(val),
+    z.number().positive({ message: "Duration must be greater than 0" })
+  ),
+  campaign: z.preprocess((val) => Number(val), z.number().nonnegative()),
+  pcontact: z.preprocess((val) => Number(val), z.number().nonnegative()),
+  poutcome: z.preprocess((val) => Number(val), z.number().nonnegative()),
+  deposit: z.enum(["true", "false"], {
+    errorMap: () => ({ message: "Deposit is required" }),
+  }),
+  //other job
+  otherJob: z.string().min(1, { message: "Please specific your other job" }),
 });
-
 function Create() {
   const [job, setJob] = useState("");
-  const [lastContact, setLastContact] = useState(false);
-  // const [formData, setFormData] = useState({});
-  // console.log(formData);
+  console.log(job);
 
   const {
     register,
+    setValue,
     handleSubmit,
     setError,
     reset,
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
-      email: "",
-      age: 18,
-      contact_type: "",
-      last_contact: "",
-      duration: 0,
+      gender: "",
+      marital: "",
+      otherJob: "",
       campaign: 0,
       pcontact: 0,
       poutcome: 0,
-      deposit: "no",
     },
     resolver: zodResolver(schema),
   });
 
   const handleJobChange = (e) => {
-    setJob(e.target.value);
-  };
+    const selectedJob = e.target.value;
+    setJob(selectedJob);
+    setValue("job", selectedJob);
 
-  const toggleLastContact = () => {
-    setLastContact(!lastContact);
+    if (selectedJob !== "other") {
+      setValue("otherJob", "-");
+    }
+    if (selectedJob === "other") {
+      setError("job", "");
+      setValue("otherJob", "");
+    }
   };
-
-  // const handleChange = (e) => {
-  //   const { id, value } = e.target;
-  //   setFormData({
-  //     ...formData,
-  //     [id]: value,
-  //   });
-  // };
 
   const onSubmit = async (formData) => {
-    console.log("Form submitted", formData); // ตรวจสอบข้อมูล
     try {
+      console.log("Form submitted", formData); // ตรวจสอบข้อมูล
+
       const res = await axios.post("/api/bank/createData", formData, {
         headers: { "Content-Type": "application/json" },
       });
       console.log("Form submission successful:", res);
-      reset(); // reset form หลังจาก submit สำเร็จ
+
+      const data = res.data;
+      if (res.status >= 200 && res.status < 300) {
+        console.log(data.message);
+      }
+      reset();
     } catch (error) {
       console.log("Form submission failed:", error);
       setError("submit", {
@@ -97,10 +114,10 @@ function Create() {
     }
   };
   return (
-    <main className="w-full h-5/6">
+    <main className="w-full h-[90%]">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full flex flex-col h-full"
+        className="w-full flex flex-col h-full relative"
       >
         <h1 className="text-5xl font-bold font-serif text-center mt-10">
           Add Infomation
@@ -108,8 +125,8 @@ function Create() {
         <div className="w-full">
           <hr className="my-10 w-2/3 mx-auto" />
         </div>
-        <div className="flex gap-5 h-4/5 w-2/3  mx-auto  font-semibold">
-          <section className="flex flex-1 flex-col gap-5">
+        <div className="flex gap-10 h-4/5 w-2/3  mx-auto  font-semibold">
+          <section className="flex flex-1 flex-col gap-5 ">
             <div>
               <label htmlFor="">
                 <p>Customer FirstName</p>
@@ -153,125 +170,175 @@ function Create() {
                 <p className="text-xs text-red-500">{errors.email.message}</p>
               )}
             </div>
-            <div className="space-x-5">
-              <label htmlFor="">Customer Gender</label>
+            <div>
+              <p>Balance</p>
               <input
-                {...register("gender")}
-                type="radio"
-                name="gender"
-                value="Male"
+                {...register("balance")}
+                type="number"
+                className="border w-full py-2 px-4 rounded-xl"
               />
-              Male
-              <input
-                {...register("gender")}
-                type="radio"
-                name="gender"
-                value="Female"
-              />
-              Female
-              {errors.gender && (
-                <p className="text-xs text-red-500">{errors.gender.message}</p>
+              {errors.balance && (
+                <p className="text-xs text-red-500">{errors.balance.message}</p>
               )}
             </div>
-            <div className="space-x-5">
-              <label htmlFor="age">Customer Age</label>
-              <select
-                {...register("age", { valueAsNumber: true })}
-                className="border w-40 text-center p-1"
-              >
-                <option value="" disabled>
-                  select age
-                </option>
-                {age.map((ageLabel, index) => (
-                  <option key={index} value={ageLabel.value}>
-                    {ageLabel.label}
+            <section className="flex">
+              <div className="">
+                <label htmlFor="">
+                  <p>Gender</p>
+                </label>
+                <input
+                  {...register("gender")}
+                  type="radio"
+                  name="gender"
+                  value="Male"
+                  className="mr-1"
+                />
+                Male
+                <input
+                  {...register("gender")}
+                  type="radio"
+                  name="gender"
+                  value="Female"
+                  className="ml-4 mr-1"
+                />
+                Female
+                {errors.gender && (
+                  <p className="text-xs text-red-500">
+                    {errors.gender.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <hr className="border-r h-full mx-10" />
+              </div>
+
+              <div className="flex-1">
+                <label htmlFor="">
+                  <p>Marital Status</p>
+                </label>
+                <input
+                  {...register("marital")}
+                  type="radio"
+                  name="marital"
+                  value="married"
+                  className="mr-1"
+                />
+                Married
+                <input
+                  {...register("marital")}
+                  type="radio"
+                  name="marital"
+                  value="single"
+                  className="ml-2 mr-1"
+                />
+                Single
+                <input
+                  {...register("marital")}
+                  type="radio"
+                  name="marital"
+                  value="disvorced"
+                  className="ml-2 mr-1"
+                />
+                Divorced
+                {errors.marital && (
+                  <p className="text-xs text-red-500">
+                    {errors.marital.message}
+                  </p>
+                )}
+              </div>
+            </section>
+            <div>
+              <div className="flex">
+                <label htmlFor="age">
+                  <p className="w-40">Customer Age</p>
+                </label>
+                <select
+                  {...register("age")}
+                  className="border w-40 p-1"
+                  defaultValue={""}
+                >
+                  <option value="" disabled>
+                    select age
                   </option>
-                ))}
-              </select>
+                  {age.map((ageLabel, index) => (
+                    <option key={index} value={ageLabel.value}>
+                      {ageLabel.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
               {errors.age && (
                 <p className="text-xs text-red-500">{errors.age.message}</p>
               )}
             </div>
             <div>
-              <label htmlFor="job">Job</label>
-              <select
-                {...register("job")}
-                name="job"
-                id="job"
-                className="border ml-4 p-1 w-40"
-                value={job}
-                onChange={handleJobChange}
-              >
-                <option value="" disabled>
-                  Select Job
-                </option>
-                <option value="developer">Developer</option>
-                <option value="designer">Designer</option>
-                <option value="manager">Manager</option>
-                <option value="other">Other</option>
-              </select>
+              <div className="flex">
+                <label htmlFor="job">
+                  <p className="w-40">Customer Job</p>
+                </label>
+                <select
+                  {...register("job")}
+                  name="job"
+                  id="job"
+                  className="border p-1 w-40"
+                  value={job}
+                  onChange={handleJobChange}
+                >
+                  <option value="" disabled>
+                    Select Job
+                  </option>
+                  <option value="developer">Developer</option>
+                  <option value="designer">Designer</option>
+                  <option value="manager">Manager</option>
+                  <option value="other">Other</option>
+                </select>
 
-              {job === "other" && (
-                <div>
-                  <label htmlFor="otherJob">
-                    <p>Please specify:</p>
-                  </label>
-                  <input
-                    {...register("otherJob")}
-                    type="text"
-                    name="otherJob"
-                    id="otherJob"
-                    className="border"
-                  />
-                </div>
-              )}
+                {job === "other" && (
+                  <>
+                    <input
+                      {...register("otherJob")}
+                      type="text"
+                      name="otherJob"
+                      id="otherJob"
+                      className="border p-1 w-52 ml-2"
+                      placeholder="Please specify your job"
+                    />
+                  </>
+                )}
+              </div>
 
               {errors.job && (
                 <p className="text-xs text-red-500">{errors.job.message}</p>
               )}
-            </div>
-            <div className="space-x-5">
-              <label htmlFor="">Marital Status</label>
-              <input
-                {...register("marital")}
-                type="radio"
-                name="marital"
-                value="option1"
-              />
-              Married
-              <input
-                {...register("marital")}
-                type="radio"
-                name="marital"
-                value="option2"
-              />
-              Single
-              <input
-                {...register("marital")}
-                type="radio"
-                name="marital"
-                value="option2"
-              />
-              Divorced
-              {errors.marital && (
-                <p className="text-xs text-red-500">{errors.marital.message}</p>
+
+              {errors.otherJob && job === "other" && (
+                <p className="text-xs text-red-500">
+                  {errors.otherJob.message}
+                </p>
               )}
             </div>
             <div>
-              <label htmlFor="">Education Level</label>
-              <select
-                {...register("education")}
-                id="education"
-                className="border w-40 p-1 ml-5"
-              >
-                <option value="" disabled>
-                  select education
-                </option>
-                <option value="tertiary">Tertiary</option>
-                <option value="secondary">Secondary</option>
-                <option value="primary">Primary</option>
-                <option value="other">Other</option>
-              </select>
+              <div className="flex">
+                <label htmlFor="education">
+                  <p className="w-40">Education Level</p>
+                </label>
+                <select
+                  {...register("education")}
+                  id="education"
+                  className="border w-40 p-1"
+                  defaultValue=""
+                >
+                  <option value="" disabled>
+                    select education
+                  </option>
+                  <option value="tertiary">Tertiary</option>
+                  <option value="secondary">Secondary</option>
+                  <option value="primary">Primary</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
               {errors.education && (
                 <p className="text-xs text-red-500">
                   {errors.education.message}
@@ -279,136 +346,254 @@ function Create() {
               )}
             </div>
           </section>
+          <div>
+            <hr className="border-r h-full" />
+          </div>
           <section className="flex flex-col flex-1">
-            <div className="flex gap-5">
-              <h3>Have Last Contact ?</h3>
-              <input type="checkbox" onClick={toggleLastContact} />
-            </div>
-            {lastContact && (
-              <div className="mt-4 flex flex-col gap-5">
-                {/* section1 */}
-                <section className="flex gap-3">
-                  <div>
+            <div className="flex flex-col gap-5">
+              <section>
+                <section className="flex">
+                  <div className="my-3 flex-1">
                     <label htmlFor="">
-                      <p>Contact Type</p>
+                      <p>
+                        Housing ?{" "}
+                        <span className="text-xs text-gray-500">
+                          has housing loan?
+                        </span>
+                      </p>
                     </label>
-                    <select id="contact_type" {...register("contact_type")}>
-                      <option value="" disabled>
-                        select
-                      </option>
-                      <option value="">Cellular</option>
-                      <option value="">Telephone</option>
-                      <option value="">Other</option>
-                    </select>
-                    {errors.contact_type && (
+                    <input
+                      {...register("housing")}
+                      type="radio"
+                      name="housing"
+                      value={true}
+                      className="mr-2"
+                    />
+                    yes
+                    <input
+                      {...register("housing")}
+                      type="radio"
+                      name="housing"
+                      value={false}
+                      className="mx-2"
+                    />
+                    no
+                    {errors.housing && (
                       <p className="text-xs text-red-500">
-                        {errors.contact_type.message}
+                        {errors.housing.message}
                       </p>
                     )}
                   </div>
                   <div>
+                    <hr className="border-r h-4/5 mt-2 mr-4" />
+                  </div>
+                  <div className="my-3 flex-1">
                     <label htmlFor="">
-                      <p>Last Contact</p>
+                      <p>
+                        Loan ?
+                        <span className="text-xs text-gray-500">
+                          {" "}
+                          has personal loan?
+                        </span>
+                      </p>
                     </label>
                     <input
-                      {...register("last_contact")}
-                      type="date"
-                      className="border"
-                      id="date"
+                      {...register("loan")}
+                      type="radio"
+                      name="loan"
+                      value={true}
+                      className="mr-2"
                     />
-                    {errors.last_contact && (
+                    yes
+                    <input
+                      {...register("loan")}
+                      type="radio"
+                      name="loan"
+                      value={false}
+                      className="mx-2"
+                    />
+                    no
+                    {errors.loan && (
                       <p className="text-xs text-red-500">
-                        {errors.last_contact.message}
+                        {errors.loan.message}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <hr className="border-r h-4/5 mt-2 mr-4" />
+                  </div>
+                  <div className="my-3">
+                    <label htmlFor="">
+                      <p>Has Creadit in default?</p>
+                    </label>
+                    <input
+                      {...register("defaultCredit")}
+                      type="radio"
+                      name="defaultCredit"
+                      value={true}
+                      className="mr-2"
+                    />
+                    yes
+                    <input
+                      {...register("defaultCredit")}
+                      type="radio"
+                      name="defaultCredit"
+                      value={false}
+                      className="mx-2"
+                    />
+                    no
+                    {errors.defaultCredit && (
+                      <p className="text-xs text-red-500">
+                        {errors.defaultCredit.message}
                       </p>
                     )}
                   </div>
                 </section>
-                <div className="flex">
-                  {/* section2 */}
-
-                  <section className="flex flex-col flex-1 gap-5">
-                    <div>
-                      <div className="mb-4">
-                        <label htmlFor="">
-                          <p>Last Contact Duration</p>
-                        </label>
-                        <p className="text-xs">
-                          ระยะเวลาการติดต่อครั้งล่าสุด (เป็นวินาที)
-                        </p>
-                      </div>
-                      <input
-                        {...register("duration")}
-                        type="number"
-                        className="border"
-                      />
-                      {errors.duration && (
-                        <p className="text-xs text-red-500">
-                          {errors.duration.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label htmlFor="">Previous Contacts</label>
-                      <p className="text-xs">
-                        จำนวนการติดต่อที่ทำก่อนแคมเปญนี้สำหรับลูกค้ารายนี้
-                      </p>
-                      <input
-                        {...register("pcontact")}
-                        type="number"
-                        className="border"
-                      />
-                      {errors.pcontact && (
-                        <p className="text-xs text-red-500">
-                          {errors.pcontact.message}
-                        </p>
-                      )}
-                    </div>
-                  </section>
-                  {/* section3 */}
-                  <section className="flex flex-col flex-1 gap-3">
-                    <div>
-                      <label htmlFor="">
-                        <p>Campaign Contacts</p>
-                      </label>
-                      <p className="text-xs mb-4">
-                        จำนวนการติดต่อที่ทำในระหว่างแคมเปญนี้สำหรับลูกค้ารายนี้
-                      </p>
-                      <input
-                        {...register("campaign")}
-                        type="number"
-                        className="border"
-                      />
-                      {errors.campaign && (
-                        <p className="text-xs text-red-500">
-                          {errors.campaign.message}
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      <label htmlFor="">Previous Campaign Outcome</label>
-                      <p className="text-xs">ผลลัพธ์จากแคมเปญการตลาดก่อนหน้า</p>
-                      <input
-                        {...register("poutcome")}
-                        type="number"
-                        className="border"
-                      />
-                      {errors.poutcome && (
-                        <p className="text-xs text-red-500">
-                          {errors.poutcome.message}
-                        </p>
-                      )}
-                    </div>
-                  </section>
+              </section>
+              {/* section1 */}
+              <section className="flex">
+                <div className="flex-1">
+                  <label htmlFor="">
+                    <p>Contact Type</p>
+                  </label>
+                  <select
+                    id="contact_type"
+                    {...register("contact_type")}
+                    className="border w-full py-2 px-4"
+                    defaultValue={""}
+                  >
+                    <option value="" disabled>
+                      select
+                    </option>
+                    <option value="cellular">Cellular</option>
+                    <option value="telephone">Telephone</option>
+                    <option value="unknown">Other</option>
+                  </select>
+                  {errors.contact_type && (
+                    <p className="text-xs text-red-500">
+                      {errors.contact_type.message}
+                    </p>
+                  )}
                 </div>
+              </section>
+
+              <section>
+                <div>
+                  <div className="mb-4">
+                    <label htmlFor="">
+                      <p>Last Contact Days</p>
+                    </label>
+                    <p className="text-xs">วันที่การติดต่อครั้งล่าสุด</p>
+                  </div>
+                  <input
+                    {...register("pdays")}
+                    type="number"
+                    className="border px-4 py-2 w-full"
+                  />
+                  {errors.pdays && (
+                    <p className="text-xs text-red-500">
+                      {errors.pdays.message}
+                    </p>
+                  )}
+                </div>
+              </section>
+              {/* section2 */}
+              <div className="flex">
+                <section className="flex flex-col flex-1 gap-5">
+                  <div>
+                    <div className="mb-4">
+                      <label htmlFor="">
+                        <p>Last Contact Duration</p>
+                      </label>
+                      <p className="text-xs">
+                        ระยะเวลาการติดต่อครั้งล่าสุด (เป็นวินาที)
+                      </p>
+                    </div>
+                    <input
+                      {...register("duration")}
+                      type="number"
+                      className="border px-4 py-2"
+                    />
+                    {errors.duration && (
+                      <p className="text-xs text-red-500">
+                        {errors.duration.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label htmlFor="">Previous Contacts</label>
+                    <p className="text-xs">จำนวนการติดต่อที่ทำก่อนแคมเปญนี้</p>
+                    <input
+                      {...register("pcontact")}
+                      type="number"
+                      className="border px-4 py-2"
+                    />
+                    {errors.pcontact && (
+                      <p className="text-xs text-red-500">
+                        {errors.pcontact.message}
+                      </p>
+                    )}
+                  </div>
+                </section>
+                <div>
+                  <hr className="border-r h-full mt-2 mx-2" />
+                </div>
+                {/* section3 */}
+                <section className="flex flex-col flex-1 gap-3">
+                  <div>
+                    <label htmlFor="">
+                      <p>Campaign Contacts</p>
+                    </label>
+                    <p className="text-xs mb-4">
+                      จำนวนการติดต่อที่ทำในระหว่างแคมเปญนี้
+                    </p>
+                    <input
+                      {...register("campaign")}
+                      type="number"
+                      className="border px-4 py-2"
+                    />
+                    {errors.campaign && (
+                      <p className="text-xs text-red-500">
+                        {errors.campaign.message}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label htmlFor="">Previous Campaign Outcome</label>
+                    <p className="text-xs">ผลลัพธ์จากแคมเปญการตลาดก่อนหน้า</p>
+                    <input
+                      {...register("poutcome")}
+                      type="number"
+                      className="border px-4 py-2"
+                    />
+                    {errors.poutcome && (
+                      <p className="text-xs text-red-500">
+                        {errors.poutcome.message}
+                      </p>
+                    )}
+                  </div>
+                </section>
               </div>
-            )}
+            </div>
             <div className="mt-4">
               <label htmlFor="">Term Deposit Subscription</label>
               <p>ลูกค้าได้สมัครฝากเงินประจำหรือไม่?</p>
-              <input type="radio" name="deposit" value="option1" />
+              <input
+                {...register("deposit")}
+                type="radio"
+                name="deposit"
+                value={true}
+                className="mr-2"
+              />
               yes
-              <input type="radio" name="deposit" value="option2" />
+              <input
+                {...register("deposit")}
+                type="radio"
+                name="deposit"
+                value={false}
+                className="mx-2"
+              />
               no
               {errors.deposit && (
                 <p className="text-xs text-red-500">{errors.deposit.message}</p>
@@ -416,13 +601,16 @@ function Create() {
             </div>
           </section>
         </div>
-        <div className="w-1/4 mx-auto mt-10">
+        <div className="absolute bottom-0 right-20">
+          <button className="py-2 px-4 bg-gray-500 text-white font-bold rounded-md text-xl">
+            <Link to="/Dashboard?tab=dashboard">Cancel</Link>
+          </button>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="bg-blue-500 w-full py-3 px-4 rounded-xl shadow-xl border font-bold text-xl text-white"
+            className="ml-4 py-2 px-4 bg-blue-500 text-white font-bold rounded-md text-xl"
           >
-            {isSubmitting ? "Loading..." : "create"}
+            {isSubmitting ? "Loading..." : "Create"}
           </button>
         </div>
         {errors && console.log("Validation Errors:", errors)}

@@ -299,8 +299,12 @@ function Dashboard() {
                         <td className="px-4 py-2 border-b">{data.marital}</td>
                         <td className="px-4 py-2 border-b">{data.education}</td>
                         <td className="px-4 py-2 border-b">{data.balance}</td>
-                        <td className="px-4 py-2 border-b">{data.housing}</td>
-                        <td className="px-4 py-2 border-b">{data.loan}</td>
+                        <td className="px-4 py-2 border-b">
+                          {data.housing === true ? "Yes" : "No"}
+                        </td>
+                        <td className="px-4 py-2 border-b">
+                          {data.loan === true ? "Yes" : "No"}
+                        </td>
                         <td className="px-4 py-2 border-b">{data.day}</td>
                         <td className="px-4 py-2 border-b">{data.month}</td>
                       </tr>
