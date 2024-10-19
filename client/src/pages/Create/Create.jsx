@@ -2,8 +2,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
+import { fireToast } from "../../components/Toast";
 
 const age = [];
 
@@ -56,8 +57,7 @@ const schema = z.object({
 });
 function Create() {
   const [job, setJob] = useState("");
-  console.log(job);
-
+  const navigate = useNavigate();
   const {
     register,
     setValue,
@@ -98,18 +98,18 @@ function Create() {
       const res = await axios.post("/api/bank/createData", formData, {
         headers: { "Content-Type": "application/json" },
       });
-      console.log("Form submission successful:", res);
 
       const data = res.data;
       if (res.status >= 200 && res.status < 300) {
-        console.log(data.message);
+        fireToast("success", data.message);
+        navigate("/Dashboard?tab=dashboard");
       }
       reset();
     } catch (error) {
-      console.log("Form submission failed:", error);
+      console.log(error);
       setError("submit", {
         type: "manual",
-        message: "Failed to submit form", // ตั้งค่าข้อความ error
+        message: "Failed to submit form",
       });
     }
   };
