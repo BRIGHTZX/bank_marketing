@@ -103,8 +103,6 @@ export const getDetails = async (req, res, next) => {
 };
 
 export const createData = async (req, res, next) => {
-  console.log(req.body);
-
   let {
     firstname,
     lastname,
