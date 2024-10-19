@@ -5,17 +5,14 @@ import authRoutes from "./routes/auth.route.js";
 import bankRoutes from "./routes/bank.route.js";
 import userRoutes from "./routes/user.route.js";
 import cors from "cors";
+import path from "path";
 
 dotenv.config();
+const __dirname = path.resolve();
 
 const app = express();
 app.use(express.json());
 app.use(cookiePaser());
-app.use(
-  cors({
-    credentials: true,
-  })
-);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/bank", bankRoutes);
@@ -23,6 +20,11 @@ app.use("/api/user", userRoutes);
 
 app.listen(4000, () => {
   console.log("Server is running on port 4000!");
+});
+
+app.use(express.static(path.join(__dirname, "/client/dist")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
 });
 
 app.use((err, req, res, next) => {
