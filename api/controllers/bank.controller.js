@@ -2,8 +2,6 @@ import { PgConnect } from "../utils/config.js";
 import errorHandler from "../utils/error.js";
 
 export const getDatas = async (req, res, next) => {
-  console.log(req.query);
-
   const pool = PgConnect();
 
   try {
@@ -36,9 +34,17 @@ export const getDatas = async (req, res, next) => {
       }
     }
 
+    if (req.query.searchTerm && req.query.searchTerm.trim()) {
+      const searchTerm = `%${req.query.searchTerm}%`;
+      query += queryParams.length > 0 ? ` AND` : ` WHERE`;
+      query += ` (job ILIKE $${queryParams.length + 1} OR marital ILIKE $${
+        queryParams.length + 2
+      })`;
+      queryParams.push(searchTerm, searchTerm);
+    }
+
     // เรียงลำดับข้อมูลตาม id
     query += ` ORDER BY id ${sortDirection}`;
-
     // Query ข้อมูลทั้งหมด
     const fullResult = await pool.query(query, queryParams);
 
@@ -50,7 +56,6 @@ export const getDatas = async (req, res, next) => {
     const totalDatas = fullResult.rowCount;
     const bankDatas = fullResult.rows; // ข้อมูลทั้งหมด
     const previewDatas = previewResult.rows; // ข้อมูลที่จำกัดตาม LIMIT
-    console.log(previewDatas);
 
     // ส่งข้อมูลทั้งหมดและข้อมูลที่จำกัดจำนวนกลับไปยัง client
     res.status(200).json({
@@ -66,23 +71,20 @@ export const getDatas = async (req, res, next) => {
 };
 
 export const getDetails = async (req, res, next) => {
-  console.log(req.query);
-
   const pool = PgConnect();
-
   try {
     let label = req.query.label;
 
-    let query = `SELECT * FROM bank_info`;
+    let query = `SELECT * FROM bank_info b JOIN bank_customer c ON b.id = c.bank_id`;
     let queryParams = [];
 
     if (label) {
       label = label.toLowerCase();
-      query += ` WHERE job = $1`;
+      query += ` WHERE b.job = $1`;
       queryParams.push(label);
     }
 
-    query += ` ORDER BY id`;
+    query += ` ORDER BY b.id`;
 
     const fullResult = await pool.query(query, queryParams);
 

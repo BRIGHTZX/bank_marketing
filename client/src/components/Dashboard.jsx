@@ -44,6 +44,7 @@ function Dashboard() {
     sort: "desc",
     month: "all",
     ageRange: "all",
+    searchTerm: "",
   });
 
   const [datas, setDatas] = useState([]);
@@ -52,8 +53,7 @@ function Dashboard() {
   const [rowsToShow, setRowsToShow] = useState(10);
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  console.log(tableData);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchDatas = async () => {
@@ -61,6 +61,8 @@ function Dashboard() {
       const sortFromUrl = urlParams.get("sort") || search.sort; // ใช้ค่า sort ที่มาจาก URL หรือ search.sort
       const monthFromUrl = urlParams.get("month") || search.month;
       const ageRangeFromUrl = urlParams.get("ageRange") || search.ageRange;
+      const searchTermFromUrl =
+        urlParams.get("searchTerm") || search.searchTerm;
 
       if (sortFromUrl || monthFromUrl || ageRangeFromUrl) {
         setSearch({
@@ -68,6 +70,7 @@ function Dashboard() {
           sort: sortFromUrl,
           month: monthFromUrl,
           ageRange: ageRangeFromUrl,
+          searchTerm: searchTermFromUrl,
         });
       }
 
@@ -114,6 +117,7 @@ function Dashboard() {
     urlParams.set("sort", search.sort);
     urlParams.set("month", search.month);
     urlParams.set("ageRange", search.ageRange);
+    urlParams.set("searchTerm", searchTerm);
 
     const searchQuery = urlParams.toString();
 
@@ -125,6 +129,13 @@ function Dashboard() {
   const handleRowsChange = (event) => {
     setRowsToShow(Number(event.target.value));
   };
+
+  const filteredData = tableData.filter((data) =>
+    Object.values(data)
+      .join(" ")
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
 
   return (
     <main>
@@ -208,7 +219,19 @@ function Dashboard() {
                   ))}
                 </select>
 
-                <button type="submit">Submit</button>
+                <input
+                  id="searchTerm"
+                  type="text"
+                  value={searchTerm}
+                  className="border"
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <button
+                  type="submit"
+                  className="bg-gray-500 py-2 px-4 font-bold"
+                >
+                  Submit
+                </button>
               </form>
             </section>
             {/* Marital Section */}
@@ -251,19 +274,21 @@ function Dashboard() {
           </section>
 
           <section className="col-span-5 p-4">
-            <label htmlFor="rowsSelect" className="mr-2">
-              Show rows:{" "}
-            </label>
-            <select
-              id="rowsSelect"
-              value={rowsToShow}
-              onChange={handleRowsChange}
-              className="border p-2"
-            >
-              <option value={10}>Top 10</option>
-              <option value={50}>Top 50</option>
-              <option value={100}>Top 100</option>
-            </select>
+            <div className="mb-4">
+              <label htmlFor="rowsSelect" className="mr-2">
+                Show rows:
+              </label>
+              <select
+                id="rowsSelect"
+                value={rowsToShow}
+                onChange={handleRowsChange}
+                className="border p-2"
+              >
+                <option value={10}>Top 10</option>
+                <option value={50}>Top 50</option>
+                <option value={100}>Top 100</option>
+              </select>
+            </div>
             <div className="overflow-x-auto h-[500px]">
               <table className="min-w-full border border-gray-300">
                 <thead className="bg-gray-100">
@@ -284,8 +309,8 @@ function Dashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {Array.isArray(tableData) && tableData.length > 0 ? (
-                    tableData.map((data) => (
+                  {filteredData.length > 0 ? (
+                    filteredData.map((data) => (
                       <tr
                         key={data.id}
                         className="hover:bg-gray-50 text-center"

@@ -23,7 +23,7 @@ ChartJS.register(
   Filler
 );
 
-function BarChart({ data, category }) {
+function BarChart({ data, category, option }) {
   const navigate = useNavigate();
   const chartRef = useRef(null); // สร้าง reference สำหรับ Chart
 
@@ -66,8 +66,12 @@ function BarChart({ data, category }) {
       },
     ],
   };
+  const options = {
+    indexAxis: option === "horizontal" ? "y" : "x", // เปลี่ยนแนวแกนตาม prop
+  };
 
   const handleClick = (event) => {
+    if (category === "gender") return;
     const chart = chartRef.current; // เข้าถึง instance ของ Chart
     if (!chart) return;
 
@@ -85,7 +89,14 @@ function BarChart({ data, category }) {
     }
   };
 
-  return <Bar ref={chartRef} data={chartData} onClick={handleClick} />;
+  return (
+    <Bar
+      ref={chartRef}
+      data={chartData}
+      onClick={handleClick}
+      options={options}
+    />
+  );
 }
 
 export default BarChart;

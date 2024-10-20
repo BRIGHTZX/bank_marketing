@@ -33,7 +33,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="px-4 py-3 flex justify-between w-full border-b">
+    <nav className="bg-white px-4 py-3 flex justify-between w-full border-b">
       {/* Left */}
       <div className="flex items-center text-xl">
         <span className="font-semibold">Dashboard</span>

@@ -4,11 +4,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { BsCashStack } from "react-icons/bs";
 import { FaUser } from "react-icons/fa";
 import PieChart from "./chartjs/PieChart";
+import LineChartPdays from "./chartjs/LineChartPdays";
 import LineChart from "./chartjs/LineChart";
 import BarChart from "./chartjs/BarChart";
 
 function Detail() {
   const navigate = useNavigate();
+  const [HeaderDetail, setHeaderDetail] = useState();
 
   const [totalUsers, setTotalUsers] = useState(null); // สร้าง state สำหรับเก็บข้อมูล
   const [totalBalance, setTotalBalance] = useState(null);
@@ -16,11 +18,13 @@ function Detail() {
   const [loading, setLoading] = useState(true); // สถานะการโหลด
   const [error, setError] = useState(null); // สถานะข้อผิดพลาด
   const location = useLocation(); // ใช้ useLocation เพื่อเข้าถึง URL
+  console.log(datas);
 
   useEffect(() => {
     // ดึง label จาก URL
     const urlParams = new URLSearchParams(location.search);
-
+    const HeaderJob = urlParams.get("label");
+    setHeaderDetail(HeaderJob);
     // ฟังก์ชัน fetch ข้อมูล
     const fetchData = async () => {
       try {
@@ -70,7 +74,12 @@ function Detail() {
         >
           Back
         </button>
-        <div className="flex justify-center gap-2 mt-4">
+        <div className="w-full text-center my-4">
+          <h1 className="text-5xl font-bold text-serif">
+            {HeaderDetail} Infomation
+          </h1>
+        </div>
+        <div className="flex flex- justify-center gap-2 mt-4">
           <div className="h-[150px] w-1/5 shadow-md border rounded-tl-3xl rounded-br-3xl p-4">
             <div className="flex items-center justify-between">
               <h3 className="text-3xl font-bold">Total Users</h3>
@@ -91,7 +100,7 @@ function Detail() {
       </section>
 
       <section className="p-4">
-        <div className="flex justify-center gap-4">
+        <div className="grid grid-cols-6 gap-4">
           <article className="p-2 shadow-md border rounded-xl">
             <div className="h-full w-full text-center">
               <h1 className="text-5xl font-bold my-4">Education</h1>
@@ -124,6 +133,39 @@ function Detail() {
               </div>
             </div>
           </article>
+          <article className="p-2 shadow-md border rounded-xl">
+            <div className="h-full w-full text-center">
+              <h1 className="text-5xl font-bold my-4">Contact</h1>
+              <div className="h-3/4 flex items-center justify-center">
+                <PieChart data={datas} category="contact" />
+              </div>
+            </div>
+          </article>
+          <article className="p-2 shadow-md border rounded-xl">
+            <div className="h-full w-full text-center">
+              <h1 className="text-5xl font-bold my-4">Have Credit</h1>
+              <div className="h-3/4 flex items-center justify-center">
+                <PieChart data={datas} category="y" />
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section className="p-4 w-full">
+        <div className="flex w-full flex-grow space-x-4">
+          <article className="flex-1 shadow-md border rounded-xl">
+            <div className="h-full w-full text-center">
+              <h1 className="text-5xl font-bold my-4">Gender</h1>
+              <BarChart data={datas} category="gender" option="horizontal" />
+            </div>
+          </article>
+          <article className="flex-1 shadow-md border rounded-xl">
+            <div className="h-full w-full text-center">
+              <h1 className="text-5xl font-bold my-4">Age</h1>
+              <BarChart data={datas} category="age" />
+            </div>
+          </article>
         </div>
       </section>
 
@@ -137,8 +179,8 @@ function Detail() {
           </article>
           <article className="flex-1 shadow-md border rounded-xl">
             <div className="h-full w-full text-center">
-              <h1 className="text-5xl font-bold my-4">Age</h1>
-              <BarChart data={datas} category="age" />
+              <h1 className="text-5xl font-bold my-4">Pdays</h1>
+              <LineChartPdays data={datas} category="pdays" />
             </div>
           </article>
         </div>

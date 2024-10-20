@@ -10,7 +10,6 @@ import Create from "../Create/Create";
 function MainDash() {
   const location = useLocation();
   const [tab, setTab] = useState("");
-  console.log(tab);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -22,7 +21,7 @@ function MainDash() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="w-full h-screen overflow-auto">
+      <div className="w-full h-screen overflow-auto bg-gray-50">
         <Navbar />
         {/* Dashboard */}
         {tab === "dashboard" && <Dashboard />}
