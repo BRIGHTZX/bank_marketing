@@ -21,7 +21,11 @@ function MainDash() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="w-full h-screen overflow-auto bg-gray-50">
+      <div
+        className={`w-full h-screen overflow-auto ${
+          tab === "add_infomation" ? `` : `bg-gray-50`
+        }`}
+      >
         <Navbar />
         {/* Dashboard */}
         {tab === "dashboard" && <Dashboard />}

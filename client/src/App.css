@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+::-webkit-scrollbar {
+  width: 8px; /* กว้างของ scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* สีพื้นหลังของ scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bebebe; /* สีของ scrollbar */
+  border-radius: 4px; /* มุมของ scrollbar */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0; /* สีของ scrollbar เมื่อ hover */
+}

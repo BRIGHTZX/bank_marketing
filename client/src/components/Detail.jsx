@@ -78,6 +78,7 @@ function Detail() {
           <h1 className="text-5xl font-bold text-serif">
             {HeaderDetail} Infomation
           </h1>
+          <hr className="border-b m-10" />
         </div>
         <div className="flex flex- justify-center gap-2 mt-4">
           <div className="h-[150px] w-1/5 shadow-md border rounded-tl-3xl rounded-br-3xl p-4">

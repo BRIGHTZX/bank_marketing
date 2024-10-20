@@ -12,6 +12,20 @@ for (let i = 18; i <= 100; i++) {
   age.push({ label: `${i}`, value: i });
 }
 
+const jobOptions = [
+  { label: "Blue Collar", value: "blue-collar" },
+  { label: "Services", value: "services" },
+  { label: "Technician", value: "technician" },
+  { label: "Self-employed", value: "self-employed" },
+  { label: "Student", value: "student" },
+  { label: "Unemployed", value: "unemployed" },
+  { label: "Retired", value: "retired" },
+  { label: "Housemaid", value: "housemaid" },
+  { label: "Admin", value: "admin." },
+  { label: "Management", value: "management" },
+  { label: "Entrepreneur", value: "entrepreneur" },
+];
+
 const schema = z.object({
   firstname: z.string().min(1, { message: "Firstname is required" }),
   lastname: z.string().min(1, { message: "Lastname is required" }),
@@ -288,9 +302,11 @@ function Create() {
                   <option value="" disabled>
                     Select Job
                   </option>
-                  <option value="developer">Developer</option>
-                  <option value="designer">Designer</option>
-                  <option value="manager">Manager</option>
+                  {jobOptions.map((job) => (
+                    <option key={job.value} value={job.value}>
+                      {job.label}
+                    </option>
+                  ))}
                   <option value="other">Other</option>
                 </select>
 
@@ -335,7 +351,7 @@ function Create() {
                   <option value="tertiary">Tertiary</option>
                   <option value="secondary">Secondary</option>
                   <option value="primary">Primary</option>
-                  <option value="other">Other</option>
+                  <option value="unknown">Other</option>
                 </select>
               </div>
 

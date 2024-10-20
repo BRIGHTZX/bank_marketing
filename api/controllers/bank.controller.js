@@ -16,7 +16,7 @@ export const getDatas = async (req, res, next) => {
 
     // กรองข้อมูลตามเดือน
     if (month && month !== "all") {
-      query += ` WHERE month = $1`;
+      query += ` WHERE b.month = $1`;
       queryParams.push(month);
     }
 
@@ -24,12 +24,12 @@ export const getDatas = async (req, res, next) => {
     if (req.query.ageRange && req.query.ageRange !== "all") {
       const [minAge, maxAge] = req.query.ageRange.split("-");
       if (queryParams.length > 0) {
-        query += ` AND age BETWEEN $${queryParams.length + 1} AND $${
+        query += ` AND b.age BETWEEN $${queryParams.length + 1} AND $${
           queryParams.length + 2
         }`; // ใช้เลขดัชนีสำหรับพารามิเตอร์
         queryParams.push(minAge, maxAge);
       } else {
-        query += ` WHERE age BETWEEN $1 AND $2`; // สำหรับกรณีที่ไม่มีเงื่อนไขอื่นก่อนหน้า
+        query += ` WHERE b.age BETWEEN $1 AND $2`; // สำหรับกรณีที่ไม่มีเงื่อนไขอื่นก่อนหน้า
         queryParams.push(minAge, maxAge);
       }
     }
@@ -37,10 +37,22 @@ export const getDatas = async (req, res, next) => {
     if (req.query.searchTerm && req.query.searchTerm.trim()) {
       const searchTerm = `%${req.query.searchTerm}%`;
       query += queryParams.length > 0 ? ` AND` : ` WHERE`;
-      query += ` (job ILIKE $${queryParams.length + 1} OR marital ILIKE $${
-        queryParams.length + 2
-      })`;
-      queryParams.push(searchTerm, searchTerm);
+      query += ` (
+        b.job ILIKE $${queryParams.length + 1} OR
+        b.marital ILIKE $${queryParams.length + 2} OR
+        b.education ILIKE $${queryParams.length + 3} OR
+        c.name ILIKE $${queryParams.length + 4} OR
+        c.email ILIKE $${queryParams.length + 5} OR
+        c.gender ILIKE $${queryParams.length + 6}
+      )`;
+      queryParams.push(
+        searchTerm,
+        searchTerm,
+        searchTerm,
+        searchTerm,
+        searchTerm,
+        searchTerm
+      );
     }
 
     // เรียงลำดับข้อมูลตาม id
