@@ -13,6 +13,7 @@ export const getUsers = async (req, res, next) => {
 
     const totalUsers = result.rowCount;
     const users = result.rows;
+    console.log(users);
 
     res.status(200).json({
       users: users,

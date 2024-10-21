@@ -7,25 +7,29 @@ import PieChart from "./chartjs/PieChart";
 import LineChartPdays from "./chartjs/LineChartPdays";
 import LineChart from "./chartjs/LineChart";
 import BarChart from "./chartjs/BarChart";
+import { ClipLoader } from "react-spinners";
+import { motion } from "framer-motion";
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0 },
+};
 
 function Detail() {
   const navigate = useNavigate();
   const [HeaderDetail, setHeaderDetail] = useState();
-
-  const [totalUsers, setTotalUsers] = useState(null); // สร้าง state สำหรับเก็บข้อมูล
+  const [totalUsers, setTotalUsers] = useState(null);
   const [totalBalance, setTotalBalance] = useState(null);
-  const [datas, setDatas] = useState(null); // สร้าง state สำหรับเก็บข้อมูล
-  const [loading, setLoading] = useState(true); // สถานะการโหลด
-  const [error, setError] = useState(null); // สถานะข้อผิดพลาด
-  const location = useLocation(); // ใช้ useLocation เพื่อเข้าถึง URL
+  const [datas, setDatas] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const location = useLocation();
   console.log(datas);
 
   useEffect(() => {
-    // ดึง label จาก URL
     const urlParams = new URLSearchParams(location.search);
     const HeaderJob = urlParams.get("label");
     setHeaderDetail(HeaderJob);
-    // ฟังก์ชัน fetch ข้อมูล
+
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -48,144 +52,191 @@ function Detail() {
           setLoading(false);
         }
       } catch (error) {
-        setError(error.message); // เก็บข้อผิดพลาดใน state
+        console.log(error);
       } finally {
-        setLoading(false); // สิ้นสุดการโหลด
+        setLoading(false);
       }
     };
 
-    fetchData(); // เรียกฟังก์ชัน fetch ข้อมูล
+    fetchData();
   }, [location.search]);
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!datas) return <div>No Data Available</div>;
 
   const handleBack = () => {
     navigate(`/Dashboard?tab=dashboard`);
   };
 
   return (
-    <main>
-      <section className="relative">
-        <button
-          onClick={handleBack}
-          className="absolute top-0 left-2 py-2 px-6 bg-black text-white font-bold rounded-md"
-        >
-          Back
-        </button>
-        <div className="w-full text-center my-4">
-          <h1 className="text-5xl font-bold text-serif">
-            {HeaderDetail} Infomation
-          </h1>
-          <hr className="border-b m-10" />
+    <main className="w-full h-[90%]">
+      {loading ? (
+        <div className="flex flex-col justify-center items-center h-full">
+          <ClipLoader color="#000" loading={loading} size={50} />
+          <motion.div
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ duration: 0.6, repeat: Infinity }}
+            className="text-3xl font-bold mt-8"
+          >
+            Loading...
+          </motion.div>
         </div>
-        <div className="flex flex- justify-center gap-2 mt-4">
-          <div className="h-[150px] w-1/5 shadow-md border rounded-tl-3xl rounded-br-3xl p-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-3xl font-bold">Total Users</h3>
-              <FaUser className="text-3xl mr-4" />
+      ) : (
+        <>
+          <section className="relative">
+            <button
+              onClick={handleBack}
+              className="absolute top-0 left-2 py-2 px-6 bg-black text-white font-bold rounded-md"
+            >
+              Back
+            </button>
+            <div className="w-full text-center my-4">
+              <h1 className="text-5xl font-bold text-serif">
+                {HeaderDetail} Information
+              </h1>
+              <hr className="border-b m-10" />
             </div>
-            <p className="text-3xl mt-4 font-bold">
-              {totalUsers} <span className="text-xl">User</span>
-            </p>
-          </div>
-          <div className="h-[150px] w-1/5 shadow-md border rounded-tl-3xl rounded-br-3xl p-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-3xl font-bold">Total Balance</h3>
-              <BsCashStack className="text-4xl mr-4" />
-            </div>
-            <p className="text-3xl font-bold mt-4"> € {totalBalance}</p>
-          </div>
-        </div>
-      </section>
+            <div className="flex justify-center gap-2 mt-4">
+              <motion.div
+                className="h-[150px] w-1/5 shadow-md border rounded-tl-3xl rounded-br-3xl p-4"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                transition={{ type: "spring", stiffness: 100, damping: 20 }}
+                variants={cardVariants}
+              >
+                <div className="flex items-center justify-between">
+                  <h3 className="text-3xl font-bold">Total Users</h3>
+                  <FaUser className="text-3xl mr-4" />
+                </div>
+                <p className="text-3xl mt-4 font-bold">
+                  {totalUsers} <span className="text-xl">User</span>
+                </p>
+              </motion.div>
 
-      <section className="p-4">
-        <div className="grid grid-cols-6 gap-4">
-          <article className="p-2 shadow-md border rounded-xl">
-            <div className="h-full w-full text-center">
-              <h1 className="text-5xl font-bold my-4">Education</h1>
-              <div className="h-3/4 flex items-center justify-center">
-                <PieChart data={datas} category="education" />
-              </div>
+              <motion.div
+                className="h-[150px] w-1/5 shadow-md border rounded-tl-3xl rounded-br-3xl p-4"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                transition={{ type: "spring", stiffness: 100, damping: 20 }}
+                variants={cardVariants}
+              >
+                <div className="flex items-center justify-between">
+                  <h3 className="text-3xl font-bold">Total Balance</h3>
+                  <BsCashStack className="text-4xl mr-4" />
+                </div>
+                <p className="text-3xl font-bold mt-4">€ {totalBalance}</p>
+              </motion.div>
             </div>
-          </article>
-          <article className="p-2 shadow-md border rounded-xl">
-            <div className="h-full w-full text-center">
-              <h1 className="text-5xl font-bold my-4">Marital</h1>
-              <div className="h-3/4 flex items-center justify-center">
-                <PieChart data={datas} category="marital" />
-              </div>
-            </div>
-          </article>
-          <article className="p-2 shadow-md border rounded-xl">
-            <div className="h-full w-full text-center">
-              <h1 className="text-5xl font-bold my-4">Housing</h1>
-              <div className="h-3/4 flex items-center justify-center">
-                <PieChart data={datas} category="housing" />
-              </div>
-            </div>
-          </article>
-          <article className="p-2 shadow-md border rounded-xl">
-            <div className="h-full w-full text-center">
-              <h1 className="text-5xl font-bold my-4">Loan</h1>
-              <div className="h-3/4 flex items-center justify-center">
-                <PieChart data={datas} category="loan" />
-              </div>
-            </div>
-          </article>
-          <article className="p-2 shadow-md border rounded-xl">
-            <div className="h-full w-full text-center">
-              <h1 className="text-5xl font-bold my-4">Contact</h1>
-              <div className="h-3/4 flex items-center justify-center">
-                <PieChart data={datas} category="contact" />
-              </div>
-            </div>
-          </article>
-          <article className="p-2 shadow-md border rounded-xl">
-            <div className="h-full w-full text-center">
-              <h1 className="text-5xl font-bold my-4">Have Credit</h1>
-              <div className="h-3/4 flex items-center justify-center">
-                <PieChart data={datas} category="y" />
-              </div>
-            </div>
-          </article>
-        </div>
-      </section>
+          </section>
 
-      <section className="p-4 w-full">
-        <div className="flex w-full flex-grow space-x-4">
-          <article className="flex-1 shadow-md border rounded-xl">
-            <div className="h-full w-full text-center">
-              <h1 className="text-5xl font-bold my-4">Gender</h1>
-              <BarChart data={datas} category="gender" option="horizontal" />
+          <section className="p-4">
+            <div className="grid grid-cols-6 gap-4">
+              {["education", "marital", "housing", "loan", "contact", "y"].map(
+                (category, index) => (
+                  <motion.article
+                    key={category}
+                    className="p-2 shadow-md border rounded-xl"
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 100,
+                      damping: 20,
+                      delay: index * 0.1,
+                    }}
+                    variants={cardVariants}
+                  >
+                    <div className="h-full w-full text-center">
+                      <h1 className="text-5xl font-bold my-4">
+                        {category.charAt(0).toUpperCase() + category.slice(1)}
+                      </h1>
+                      <div className="h-3/4 flex items-center justify-center">
+                        <PieChart data={datas} category={category} />
+                      </div>
+                    </div>
+                  </motion.article>
+                )
+              )}
             </div>
-          </article>
-          <article className="flex-1 shadow-md border rounded-xl">
-            <div className="h-full w-full text-center">
-              <h1 className="text-5xl font-bold my-4">Age</h1>
-              <BarChart data={datas} category="age" />
-            </div>
-          </article>
-        </div>
-      </section>
+          </section>
 
-      <section className="p-4 w-full">
-        <div className="flex w-full flex-grow space-x-4">
-          <article className="flex-1 shadow-md border rounded-xl">
-            <div className="h-full w-full text-center">
-              <h1 className="text-5xl font-bold my-4">age-balance</h1>
-              <LineChart data={datas} />
+          <section className="p-4 w-full">
+            <div className="flex w-full flex-grow space-x-4">
+              <motion.article
+                className="flex-1 shadow-md border rounded-xl"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                transition={{ type: "spring", stiffness: 100, damping: 20 }}
+                variants={cardVariants}
+              >
+                <div className="h-full w-full text-center">
+                  <h1 className="text-5xl font-bold my-4">Gender</h1>
+                  <BarChart
+                    data={datas}
+                    category="gender"
+                    option="horizontal"
+                  />
+                </div>
+              </motion.article>
+              <motion.article
+                className="flex-1 shadow-md border rounded-xl"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                transition={{
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 20,
+                  delay: 0.1,
+                }}
+                variants={cardVariants}
+              >
+                <div className="h-full w-full text-center">
+                  <h1 className="text-5xl font-bold my-4">Age</h1>
+                  <BarChart data={datas} category="age" />
+                </div>
+              </motion.article>
             </div>
-          </article>
-          <article className="flex-1 shadow-md border rounded-xl">
-            <div className="h-full w-full text-center">
-              <h1 className="text-5xl font-bold my-4">Pdays</h1>
-              <LineChartPdays data={datas} category="pdays" />
+          </section>
+
+          <section className="p-4 w-full">
+            <div className="flex w-full flex-grow space-x-4">
+              <motion.article
+                className="flex-1 shadow-md border rounded-xl"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                transition={{ type: "spring", stiffness: 100, damping: 20 }}
+                variants={cardVariants}
+              >
+                <div className="h-full w-full text-center">
+                  <h1 className="text-5xl font-bold my-4">age-balance</h1>
+                  <LineChart data={datas} />
+                </div>
+              </motion.article>
+              <motion.article
+                className="flex-1 shadow-md border rounded-xl"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                transition={{
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 20,
+                  delay: 0.1,
+                }}
+                variants={cardVariants}
+              >
+                <div className="h-full w-full text-center">
+                  <h1 className="text-5xl font-bold my-4">Pdays</h1>
+                  <LineChartPdays data={datas} category="pdays" />
+                </div>
+              </motion.article>
             </div>
-          </article>
-        </div>
-      </section>
+          </section>
+        </>
+      )}
     </main>
   );
 }

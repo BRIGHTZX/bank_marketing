@@ -23,7 +23,15 @@ ChartJS.register(
   Filler
 );
 
-function BarChart({ data, category, option }) {
+function BarChart({
+  data,
+  category,
+  option,
+  xlabel,
+  ylabel,
+  barLabel,
+  description,
+}) {
   const navigate = useNavigate();
   const chartRef = useRef(null); // สร้าง reference สำหรับ Chart
 
@@ -54,7 +62,7 @@ function BarChart({ data, category, option }) {
     labels: labels,
     datasets: [
       {
-        label: "จำนวนคนต่ออาชีพ",
+        label: barLabel,
         data: dataset,
         backgroundColor: labels.map(
           (_, index) => backgroundColors[index % backgroundColors.length]
@@ -67,7 +75,30 @@ function BarChart({ data, category, option }) {
     ],
   };
   const options = {
-    indexAxis: option === "horizontal" ? "y" : "x", // เปลี่ยนแนวแกนตาม prop
+    indexAxis: option === "horizontal" ? "y" : "x",
+    plugins: {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: true,
+        text: description,
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: xlabel,
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: ylabel,
+        },
+      },
+    },
   };
 
   const handleClick = (event) => {
@@ -84,7 +115,6 @@ function BarChart({ data, category, option }) {
     if (elements.length > 0) {
       const elementIndex = elements[0].index; // ดึง index ของแท่งที่ถูกคลิก
       const label = labels[elementIndex]; // ใช้ index เพื่อดึง label ของแท่ง
-      console.log(`คลิกแท่ง: ${label}`); // แสดงผลใน console
       navigate(`/Dashboard?tab=detail&label=${label}`);
     }
   };

@@ -19,7 +19,15 @@ ChartJS.register(
   Legend
 );
 
-function BarCompareChart({ data, category, option }) {
+function BarCompareChart({
+  data,
+  category,
+  option,
+  xlabel,
+  ylabel,
+  barLabel,
+  description,
+}) {
   if (!data || data.length === 0) {
     return <p>No Data Available</p>;
   }
@@ -62,7 +70,7 @@ function BarCompareChart({ data, category, option }) {
     labels: labels, // อาชีพต่างๆ
     datasets: [
       {
-        label: "ยอดเงินเฉลี่ยต่ออาชีพ",
+        label: barLabel,
         data: dataset, // ข้อมูล balance เฉลี่ยต่ออาชีพ
         backgroundColor: labels.map(
           (_, index) => backgroundColors[index % backgroundColors.length]
@@ -77,14 +85,28 @@ function BarCompareChart({ data, category, option }) {
 
   const options = {
     indexAxis: option === "horizontal" ? "y" : "x", // เปลี่ยนแนวแกนตาม prop
+    plugins: {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: true,
+        text: description,
+      },
+    },
+
     scales: {
       x: {
         beginAtZero: true, // เริ่มที่ 0
+        title: {
+          display: true,
+          text: xlabel,
+        },
       },
       y: {
         title: {
           display: true,
-          text: category[0] === "age" ? "อายุ" : "อาชีพ", // ชื่อแกน Y ขึ้นอยู่กับ category
+          text: ylabel,
         },
       },
     },

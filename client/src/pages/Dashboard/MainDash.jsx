@@ -1,11 +1,9 @@
 import Sidebar from "../../components/Sidebar";
 import Dashboard from "../../components/Dashboard";
-import DashUser from "../../components/DashUser";
 import Navbar from "../../components/Navbar";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Detail from "../../components/Detail";
-import Create from "../Create/Create";
 
 function MainDash() {
   const location = useLocation();
@@ -30,10 +28,6 @@ function MainDash() {
         {/* Dashboard */}
         {tab === "dashboard" && <Dashboard />}
         {tab === "detail" && <Detail />}
-
-        {/* Admin */}
-        {tab === "add_infomation" && <Create />}
-        {tab === "users" && <DashUser />}
       </div>
     </div>
   );

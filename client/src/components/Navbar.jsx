@@ -33,7 +33,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="bg-white px-4 py-3 flex justify-between w-full border-b">
+    <nav className="bg-white px-4 py-3 flex justify-between w-full border-b sticky top-0">
       {/* Left */}
       <div className="flex items-center text-xl">
         <span className="font-semibold">Dashboard</span>
@@ -47,14 +47,13 @@ function Navbar() {
         {isDropdownOpen && (
           <div
             id="profile-dropdown"
-            className="z-10 absolute top-full right-0 text-black bg-gray-200 rounded-xl shadow w-32"
+            className="z-10 absolute top-full right-0 text-black bg-gray-50 rounded-xl shadow w-32"
           >
-            <ul className="py-2 text-sm">
+            <ul className="py-2 text-sm text-center font-bold">
               <li>
-                <button>Profile</button>
-              </li>
-              <li>
-                <button onClick={handleSignOut}>Log Out</button>
+                <button onClick={handleSignOut} className="hover:underline">
+                  Log Out
+                </button>
               </li>
             </ul>
           </div>

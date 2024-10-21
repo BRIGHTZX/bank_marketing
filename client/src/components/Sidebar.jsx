@@ -5,10 +5,10 @@ import axios from "axios";
 import { fireToast } from "./Toast";
 // icon
 import { BiArrowFromRight } from "react-icons/bi";
-import { CgProfile } from "react-icons/cg";
 import { RiLogoutBoxFill } from "react-icons/ri";
 import { HiOutlineUserGroup } from "react-icons/hi";
 import { BsFilePost } from "react-icons/bs";
+import { RxDashboard } from "react-icons/rx";
 
 import { useSelector } from "react-redux";
 import { FaBars } from "react-icons/fa";
@@ -72,28 +72,20 @@ export default function Sidebar() {
             <div className="flex-grow borderw-full h-full">
               <Link to="/Dashboard?tab=dashboard">
                 <SidebarItem
-                  icon={<CgProfile />}
+                  icon={<RxDashboard />}
                   text="Dashboard"
                   currentUser={currentUser.isadmin}
                   active={tab == "dashboard"}
-                  alert
                 />
               </Link>
               <hr />
               {currentUser.isadmin === true && (
                 <>
-                  <Link to="/Dashboard?tab=add_infomation">
+                  <Link to="/Create">
                     <SidebarItem
                       icon={<BsFilePost />}
                       text="Add"
                       active={tab == "posts"}
-                    />
-                  </Link>
-                  <Link to="/Dashboard?tab=users">
-                    <SidebarItem
-                      icon={<HiOutlineUserGroup />}
-                      text="Users"
-                      active={tab == "users"}
                     />
                   </Link>
                 </>
@@ -114,14 +106,7 @@ export default function Sidebar() {
   );
 }
 
-export function SidebarItem({
-  icon,
-  text,
-  currentUser,
-  active,
-  alert,
-  ...props
-}) {
+export function SidebarItem({ icon, text, active, ...props }) {
   const { expanded } = useContext(SidebarContext);
 
   return (
@@ -131,7 +116,7 @@ export function SidebarItem({
             relative flex items-center py-2 px-3 my-1
             rounded-md cursor-pointer z-50
 
-            ${active ? "bg-gray-500/20 text-primary" : ""}
+            ${active ? "bg-gray-500/20 text-black" : ""}
             hover:bg-gray-500/50
         `}
     >
@@ -141,30 +126,13 @@ export function SidebarItem({
           expanded ? "ml-3" : "w-0"
         }`}
       >
-        {text === "Profile" ? (
-          <>
-            {text}
-            <span className="flex items-center text-sm font-bold bg-gray-400 px-2 ml-5 rounded-sm">
-              {currentUser === true ? "Admin" : "User"}
-            </span>
-          </>
-        ) : (
-          text
-        )}
+        {text}
       </span>
-      {alert && (
-        <div
-          className={`absolute right-2 w-2 h-2 rounded bg-blue-600
-                        ${expanded ? "" : "top-2"}
-                    `}
-        />
-      )}
-
       {!expanded && (
         <div
           className={`
       absolute left-full rounded-md px-2 py-1 ml-6 
-      bg-primary text-secondary text-sm 
+      bg-black text-white text-sm 
       opacity-0 -translate-x-3 transition-all
       group-hover:opacity-100 group-hover:translate-x-0
       group-hover:visible invisible

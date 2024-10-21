@@ -20,7 +20,7 @@ ChartJS.register(
   Legend
 );
 
-function LineChart({ data }) {
+function LineChart({ data, description }) {
   if (!data || data.length === 0) {
     return <p>No Data Available</p>;
   }
@@ -65,7 +65,7 @@ function LineChart({ data }) {
       },
       title: {
         display: true,
-        text: "My Line Chart",
+        text: description,
       },
     },
   };
