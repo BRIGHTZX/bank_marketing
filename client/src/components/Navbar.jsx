@@ -36,13 +36,13 @@ function Navbar() {
     <nav className="bg-white px-4 py-3 flex justify-between w-full border-b sticky top-0">
       {/* Left */}
       <div className="flex items-center text-xl">
-        <span className="font-semibold">Dashboard</span>
+        <span className="font-bold">Portuguese Bank Marketing</span>
       </div>
       {/* Right */}
       <div className="relative" ref={dropdownRef}>
         {/* Dropdown */}
         <button onClick={toggleDropdown}>
-          <p>{currentUser.username}</p>
+          <p className="font-semibold">{currentUser.username}</p>
         </button>
         {isDropdownOpen && (
           <div

@@ -132,7 +132,7 @@ function Create() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="w-full h-screen bg-white">
+      <div className="w-full h-screen bg-white overflow-auto">
         <Navbar />
         <main className="w-full overflow-auto">
           <form

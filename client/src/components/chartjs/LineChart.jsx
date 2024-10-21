@@ -20,7 +20,7 @@ ChartJS.register(
   Legend
 );
 
-function LineChart({ data, description }) {
+function LineChart({ data, description, xlabel, ylabel, barLabel }) {
   if (!data || data.length === 0) {
     return <p>No Data Available</p>;
   }
@@ -47,7 +47,7 @@ function LineChart({ data, description }) {
     labels: labels,
     datasets: [
       {
-        label: "ค่าเฉลี่ย Balance ตามอายุ",
+        label: barLabel,
         data: dataset,
         borderColor: "rgba(75, 192, 192, 1)",
         backgroundColor: "rgba(75, 192, 192, 0.2)",
@@ -66,6 +66,20 @@ function LineChart({ data, description }) {
       title: {
         display: true,
         text: description,
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: xlabel,
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: ylabel,
+        },
       },
     },
   };
