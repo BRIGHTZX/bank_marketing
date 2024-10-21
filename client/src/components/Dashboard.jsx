@@ -168,7 +168,7 @@ function Dashboard() {
             variants={sectionVariants}
           >
             <h1 className="text-5xl font-bold ml-4">Dashboard</h1>
-            <hr className="w-[95%] my-4" />
+            <hr className="w-[95%] my-4 ml-5" />
           </motion.div>
           <div className="grid grid-cols-5 gap-1">
             <section className="col-span-3 h-[180px] p-4">
