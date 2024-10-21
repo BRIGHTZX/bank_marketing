@@ -9,6 +9,8 @@ import LineChart from "./chartjs/LineChart";
 import BarChart from "./chartjs/BarChart";
 import { ClipLoader } from "react-spinners";
 import { motion } from "framer-motion";
+import MixedChart from "./chartjs/MixedChart";
+import BarCompareChart from "./chartjs/BarCompareChart";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -23,7 +25,6 @@ function Detail() {
   const [datas, setDatas] = useState(null);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
-  console.log(datas);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -91,7 +92,7 @@ function Detail() {
               <h1 className="text-5xl font-bold text-serif">
                 {HeaderDetail} Information
               </h1>
-              <hr className="border-b m-10" />
+              <hr className="border-b-0 m-10" />
             </div>
             <div className="flex justify-center gap-2 mt-4">
               <motion.div
@@ -103,11 +104,11 @@ function Detail() {
                 variants={cardVariants}
               >
                 <div className="flex items-center justify-between">
-                  <h3 className="text-3xl font-bold">Total Users</h3>
+                  <h3 className="text-3xl font-bold">Total Customers</h3>
                   <FaUser className="text-3xl mr-4" />
                 </div>
                 <p className="text-3xl mt-4 font-bold">
-                  {totalUsers} <span className="text-xl">User</span>
+                  {totalUsers} <span className="text-xl">Customers</span>
                 </p>
               </motion.div>
 
@@ -128,10 +129,171 @@ function Detail() {
             </div>
           </section>
 
-          <section className="p-4">
-            <div className="grid grid-cols-6 gap-4">
-              {["education", "marital", "housing", "loan", "contact", "y"].map(
-                (category, index) => (
+          <section className="grid grid-cols-5">
+            <section className="col-span-3">
+              <div className="p-4">
+                <motion.article
+                  className="shadow-md border rounded-xl p-10"
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 20,
+                    delay: 0.1,
+                  }}
+                  variants={cardVariants}
+                >
+                  <div className="h-full w-full text-center">
+                    <h1 className="text-5xl font-bold my-4">
+                      Monthly Overview
+                    </h1>
+                    <MixedChart data={datas} category={["month", "balance"]} />
+                  </div>
+                </motion.article>
+              </div>
+              <div className="p-4">
+                <motion.article
+                  className="shadow-md border rounded-xl p-10"
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 20,
+                    delay: 0.1,
+                  }}
+                  variants={cardVariants}
+                >
+                  <div className="h-full w-full text-center">
+                    <h1 className="text-5xl font-bold my-4">
+                      Average Balance by Age
+                    </h1>
+                    <LineChart
+                      data={datas}
+                      xlabel="Age"
+                      ylabel="Balance"
+                      barLabel="Balance per Age"
+                      description="Average balance per age"
+                    />
+                  </div>
+                </motion.article>
+              </div>
+              <div className="p-4">
+                <motion.article
+                  className="shadow-md border rounded-xl p-10"
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 20,
+                    delay: 0.1,
+                  }}
+                  variants={cardVariants}
+                >
+                  <div className="h-full w-full text-center">
+                    <h1 className="text-5xl font-bold my-4">
+                      Marital - Balance
+                    </h1>
+                    <BarCompareChart
+                      data={datas}
+                      category={["marital", "balance"]}
+                      xlabel="Balance"
+                      ylabel="Occupation"
+                      barLabel="Balance per Occupation"
+                      description="Average balance per occupation"
+                    />
+                  </div>
+                </motion.article>
+              </div>
+              <div className="p-4">
+                <motion.article
+                  className="shadow-md border rounded-xl p-10"
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 20,
+                    delay: 0.1,
+                  }}
+                  variants={cardVariants}
+                >
+                  <div className="h-full w-full text-center">
+                    <h1 className="text-5xl font-bold my-4">
+                      Education - Balance
+                    </h1>
+                    <BarCompareChart
+                      data={datas}
+                      category={["education", "balance"]}
+                      xlabel="Balance"
+                      ylabel="Occupation"
+                      barLabel="Balance per Occupation"
+                      description="Average balance per occupation"
+                    />
+                  </div>
+                </motion.article>
+              </div>
+            </section>
+            <section className="col-span-2 pt-4 pr-4 space-y-4">
+              <motion.article
+                className="shadow-md border rounded-xl p-7"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                transition={{ type: "spring", stiffness: 100, damping: 20 }}
+                variants={cardVariants}
+              >
+                <div className="h-full w-full text-center">
+                  <h1 className="text-5xl font-bold my-4">Gender</h1>
+                  <BarChart
+                    data={datas}
+                    category="gender"
+                    xlabel="Number of People"
+                    ylabel="Gender"
+                    option="horizontal"
+                  />
+                </div>
+              </motion.article>
+              <motion.article
+                className="shadow-md border rounded-xl p-7"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                transition={{
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 20,
+                  delay: 0.1,
+                }}
+                variants={cardVariants}
+              >
+                <div className="h-full w-full text-center">
+                  <h1 className="text-5xl font-bold my-4">Age</h1>
+                  <BarChart
+                    data={datas}
+                    category="age"
+                    xlabel="Age"
+                    ylabel="Number of People"
+                    barLabel="People per Age in"
+                    description={`Overview of the population distribution by Age in ${HeaderDetail}`}
+                  />
+                </div>
+              </motion.article>
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  "education",
+                  "marital",
+                  "housing",
+                  "loan",
+                  "contact",
+                  "y",
+                ].map((category, index) => (
                   <motion.article
                     key={category}
                     className="p-2 shadow-md border rounded-xl"
@@ -155,32 +317,35 @@ function Detail() {
                       </div>
                     </div>
                   </motion.article>
-                )
-              )}
-            </div>
-          </section>
-
-          <section className="p-4 w-full">
-            <div className="flex w-full flex-grow space-x-4">
+                ))}
+              </div>
               <motion.article
-                className="flex-1 shadow-md border rounded-xl"
+                className="shadow-md border rounded-xl p-7"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                transition={{ type: "spring", stiffness: 100, damping: 20 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 20,
+                  delay: 0.1,
+                }}
                 variants={cardVariants}
               >
                 <div className="h-full w-full text-center">
-                  <h1 className="text-5xl font-bold my-4">Gender</h1>
-                  <BarChart
+                  <h1 className="text-5xl font-bold my-4">Housing - Balance</h1>
+                  <BarCompareChart
                     data={datas}
-                    category="gender"
-                    option="horizontal"
+                    category={["housing", "balance"]}
+                    xlabel="Balance"
+                    ylabel="Occupation"
+                    barLabel="Balance per Occupation"
+                    description="Average balance per occupation"
                   />
                 </div>
               </motion.article>
               <motion.article
-                className="flex-1 shadow-md border rounded-xl"
+                className="shadow-md border rounded-xl p-7"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
@@ -193,47 +358,22 @@ function Detail() {
                 variants={cardVariants}
               >
                 <div className="h-full w-full text-center">
-                  <h1 className="text-5xl font-bold my-4">Age</h1>
-                  <BarChart data={datas} category="age" />
+                  <h1 className="text-5xl font-bold my-4">Loan - Balance</h1>
+                  <BarCompareChart
+                    data={datas}
+                    category={["loan", "balance"]}
+                    xlabel="Balance"
+                    ylabel="Occupation"
+                    barLabel="Balance per Occupation"
+                    description="Average balance per occupation"
+                  />
                 </div>
               </motion.article>
-            </div>
+            </section>
           </section>
 
           <section className="p-4 w-full">
-            <div className="flex w-full flex-grow space-x-4">
-              <motion.article
-                className="flex-1 shadow-md border rounded-xl"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                transition={{ type: "spring", stiffness: 100, damping: 20 }}
-                variants={cardVariants}
-              >
-                <div className="h-full w-full text-center">
-                  <h1 className="text-5xl font-bold my-4">age-balance</h1>
-                  <LineChart data={datas} />
-                </div>
-              </motion.article>
-              <motion.article
-                className="flex-1 shadow-md border rounded-xl"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                transition={{
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 20,
-                  delay: 0.1,
-                }}
-                variants={cardVariants}
-              >
-                <div className="h-full w-full text-center">
-                  <h1 className="text-5xl font-bold my-4">Pdays</h1>
-                  <LineChartPdays data={datas} category="pdays" />
-                </div>
-              </motion.article>
-            </div>
+            <div className="flex w-full flex-grow space-x-4"></div>
           </section>
         </>
       )}

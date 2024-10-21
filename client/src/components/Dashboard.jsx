@@ -9,6 +9,7 @@ import { FaUser } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import { motion } from "framer-motion";
+import MixedChart from "./chartjs/MixedChart";
 
 const months = [
   { full: "All", short: "all" },
@@ -183,11 +184,11 @@ function Dashboard() {
                   variants={sectionVariants}
                 >
                   <div className="flex items-center justify-between">
-                    <h3 className="text-3xl font-bold">Total Users</h3>
+                    <h3 className="text-3xl font-bold">Total Customers</h3>
                     <FaUser className="text-3xl mr-4" />
                   </div>
                   <p className="text-3xl mt-4 font-bold">
-                    {totalUsers} <span className="text-xl">User</span>
+                    {totalUsers} <span className="text-xl">Customers</span>
                   </p>
                 </motion.div>
 
@@ -240,15 +241,8 @@ function Dashboard() {
                 variants={sectionVariants}
               >
                 <div className="h-full w-full text-center">
-                  <h1 className="text-5xl font-bold my-4">AGE</h1>
-                  <BarChart
-                    data={datas}
-                    category="age"
-                    xlabel="Age"
-                    ylabel="Number of People"
-                    barLabel="People per Age"
-                    description="Overview of the population distribution by Age"
-                  />
+                  <h1 className="text-5xl font-bold my-4">Monthly Overview</h1>
+                  <MixedChart data={datas} category={["month", "balance"]} />
                 </div>
               </motion.div>
             </section>
@@ -399,6 +393,7 @@ function Dashboard() {
                     ylabel="Occupation"
                     barLabel="Balance per Occupation"
                     description="Average balance per occupation"
+                    avg={true}
                     option="horizontal"
                   />
                 </div>

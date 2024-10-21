@@ -27,34 +27,35 @@ function BarCompareChart({
   ylabel,
   barLabel,
   description,
+  avg,
 }) {
   if (!data || data.length === 0) {
     return <p>No Data Available</p>;
   }
 
-  // จัดกลุ่มตามอาชีพ (job) และคำนวณ balance เฉลี่ยของแต่ละอาชีพ
   const jobData = data.reduce((acc, current) => {
     const job = current[category[0]];
     const balance = current[category[1]];
 
-    // ตรวจสอบว่ามี key อาชีพใน object สะสมหรือยัง
     if (!acc[job]) {
       acc[job] = { totalBalance: 0, count: 0 };
     }
 
-    // บวกค่า balance เข้ากับค่า balance เดิม และนับจำนวนคนต่ออาชีพ
     acc[job].totalBalance += balance;
     acc[job].count += 1;
 
     return acc;
-  }, {}); // {} = ค่าเริ่มต้น เป็น object เปล่า
+  }, {});
 
-  // คำนวณค่าเฉลี่ยต่ออาชีพ
-  const labels = Object.keys(jobData); // อาชีพต่างๆ
-  const dataset = labels.map(
-    (job) => jobData[job].totalBalance / jobData[job].count
-  ); // ค่าเฉลี่ย
-
+  let labels = Object.keys(jobData); // อาชีพต่างๆ
+  const dataset = labels.map((job) => {
+    if (avg === true) {
+      return jobData[job].totalBalance / jobData[job].count; // Calculate average
+    } else {
+      return jobData[job].totalBalance; // Return total balance
+    }
+  });
+  labels = labels.map((job) => job.charAt(0).toUpperCase() + job.slice(1));
   // กำหนดสีสำหรับแต่ละแท่ง
   const backgroundColors = [
     "rgba(75, 192, 192, 0.6)", // แท่งที่ 1

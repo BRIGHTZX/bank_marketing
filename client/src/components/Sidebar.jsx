@@ -6,7 +6,6 @@ import { fireToast } from "./Toast";
 // icon
 import { BiArrowFromRight } from "react-icons/bi";
 import { RiLogoutBoxFill } from "react-icons/ri";
-import { HiOutlineUserGroup } from "react-icons/hi";
 import { BsFilePost } from "react-icons/bs";
 import { RxDashboard } from "react-icons/rx";
 
@@ -17,8 +16,7 @@ const SidebarContext = createContext();
 
 export default function Sidebar() {
   const navigate = useNavigate();
-  const currentUser = useSelector((state) => state.user.currentUser);
-
+  const { currentUser } = useSelector((state) => state.user);
   const [expanded, setExpanded] = useState(false);
   const location = useLocation();
   const [tab, setTab] = useState("");
@@ -74,7 +72,6 @@ export default function Sidebar() {
                 <SidebarItem
                   icon={<RxDashboard />}
                   text="Dashboard"
-                  currentUser={currentUser.isadmin}
                   active={tab == "dashboard"}
                 />
               </Link>
