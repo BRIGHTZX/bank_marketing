@@ -94,7 +94,7 @@ function Detail() {
               </h1>
               <hr className="border-b-0 m-10" />
             </div>
-            <div className="flex justify-center gap-2 mt-4">
+            <div className="flex justify-center gap-2 ">
               <motion.div
                 className="h-[150px] w-1/5 shadow-md border rounded-tl-3xl rounded-br-3xl p-4"
                 initial="hidden"
@@ -107,7 +107,7 @@ function Detail() {
                   <h3 className="text-3xl font-bold">Total Customers</h3>
                   <FaUser className="text-3xl mr-4" />
                 </div>
-                <p className="text-3xl mt-4 font-bold">
+                <p className="text-3xl  font-bold">
                   {totalUsers} <span className="text-xl">Customers</span>
                 </p>
               </motion.div>
@@ -124,7 +124,7 @@ function Detail() {
                   <h3 className="text-3xl font-bold">Total Balance</h3>
                   <BsCashStack className="text-4xl mr-4" />
                 </div>
-                <p className="text-3xl font-bold mt-4">€ {totalBalance}</p>
+                <p className="text-3xl font-bold ">€ {totalBalance}</p>
               </motion.div>
             </div>
           </section>
@@ -146,10 +146,18 @@ function Detail() {
                   variants={cardVariants}
                 >
                   <div className="h-full w-full text-center">
-                    <h1 className="text-5xl font-bold my-4">
-                      Monthly Overview
+                    <h1 className="text-5xl font-bold">
+                      Monthly Balance Overview
                     </h1>
-                    <MixedChart data={datas} category={["month", "balance"]} />
+                    <MixedChart
+                      data={datas}
+                      category={["month", "balance"]}
+                      label={["Total Count by Month", "Total Balance by Month"]}
+                      xLabel="Month"
+                      yLeft="Total Balance"
+                      yRight="Total Count"
+                      description="Monthly balance changes summary."
+                    />
                   </div>
                 </motion.article>
               </div>
@@ -171,73 +179,66 @@ function Detail() {
                     <h1 className="text-5xl font-bold my-4">
                       Average Balance by Age
                     </h1>
-                    <LineChart
+                    <MixedChart
                       data={datas}
-                      xlabel="Age"
-                      ylabel="Balance"
-                      barLabel="Balance per Age"
-                      description="Average balance per age"
+                      category={["age", "balance"]}
+                      label={["Total Count by Age", "Total Balance by Age"]}
+                      xLabel="Ages"
+                      yLeft="Total Balance"
+                      yRight="Total Count"
+                      description="Summary of Balance Changes by Age."
                     />
                   </div>
                 </motion.article>
               </div>
               <div className="p-4">
-                <motion.article
-                  className="shadow-md border rounded-xl p-10"
+                <motion.div
+                  className="shadow-md border  rounded-xl bg-white p-10"
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 100,
-                    damping: 20,
-                    delay: 0.1,
-                  }}
+                  transition={{ duration: 0.5, delay: 0.6 }}
                   variants={cardVariants}
                 >
                   <div className="h-full w-full text-center">
                     <h1 className="text-5xl font-bold my-4">
-                      Marital - Balance
+                      Campaign Contact
                     </h1>
                     <BarCompareChart
                       data={datas}
-                      category={["marital", "balance"]}
-                      xlabel="Balance"
-                      ylabel="Occupation"
-                      barLabel="Balance per Occupation"
-                      description="Average balance per occupation"
+                      category={["contact", "campaign"]}
+                      xlabel="Contact Types"
+                      ylabel="Number of campaign"
+                      barLabel="Contact Type Campaign Summary"
+                      description="Total Campaigns associated with each contact."
                     />
                   </div>
-                </motion.article>
+                </motion.div>
               </div>
               <div className="p-4">
-                <motion.article
-                  className="shadow-md border rounded-xl p-10"
+                <motion.section
+                  className="col-span-2 p-10 shadow-md border rounded-xl  bg-white"
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 100,
-                    damping: 20,
-                    delay: 0.1,
-                  }}
+                  transition={{ duration: 0.5, delay: 0.6 }}
                   variants={cardVariants}
                 >
                   <div className="h-full w-full text-center">
                     <h1 className="text-5xl font-bold my-4">
-                      Education - Balance
+                      Monthly Campaign
                     </h1>
+                    <p className="text-3xl font-bold">Overview</p>
                     <BarCompareChart
                       data={datas}
-                      category={["education", "balance"]}
-                      xlabel="Balance"
-                      ylabel="Occupation"
-                      barLabel="Balance per Occupation"
-                      description="Average balance per occupation"
+                      category={["month", "campaign"]}
+                      xlabel="Month"
+                      ylabel="Number of Campaign"
+                      barLabel="Total Campaign per Month"
+                      description="Monthly Campaign Summary"
                     />
                   </div>
-                </motion.article>
+                </motion.section>
               </div>
             </section>
             <section className="col-span-2 pt-4 pr-4 space-y-4">
@@ -250,13 +251,14 @@ function Detail() {
                 variants={cardVariants}
               >
                 <div className="h-full w-full text-center">
-                  <h1 className="text-5xl font-bold my-4">Gender</h1>
+                  <h1 className="text-3xl font-bold my-4">Gender</h1>
                   <BarChart
                     data={datas}
                     category="gender"
                     xlabel="Number of People"
                     ylabel="Gender"
                     option="horizontal"
+                    description="Distribution of people by gender."
                   />
                 </div>
               </motion.article>
@@ -274,7 +276,7 @@ function Detail() {
                 variants={cardVariants}
               >
                 <div className="h-full w-full text-center">
-                  <h1 className="text-5xl font-bold my-4">Age</h1>
+                  <h1 className="text-3xl font-bold my-4">Age</h1>
                   <BarChart
                     data={datas}
                     category="age"
@@ -309,8 +311,11 @@ function Detail() {
                     variants={cardVariants}
                   >
                     <div className="h-full w-full text-center">
-                      <h1 className="text-5xl font-bold my-4">
-                        {category.charAt(0).toUpperCase() + category.slice(1)}
+                      <h1 className="text-4xl font-bold my-4">
+                        {category === "y"
+                          ? "Deposit"
+                          : category.charAt(0).toUpperCase() +
+                            category.slice(1)}
                       </h1>
                       <div className="h-3/4 flex items-center justify-center">
                         <PieChart data={datas} category={category} />
@@ -319,61 +324,67 @@ function Detail() {
                   </motion.article>
                 ))}
               </div>
-              <motion.article
-                className="shadow-md border rounded-xl p-7"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                transition={{
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 20,
-                  delay: 0.1,
-                }}
-                variants={cardVariants}
-              >
-                <div className="h-full w-full text-center">
-                  <h1 className="text-5xl font-bold my-4">Housing - Balance</h1>
-                  <BarCompareChart
-                    data={datas}
-                    category={["housing", "balance"]}
-                    xlabel="Balance"
-                    ylabel="Occupation"
-                    barLabel="Balance per Occupation"
-                    description="Average balance per occupation"
-                  />
-                </div>
-              </motion.article>
-              <motion.article
-                className="shadow-md border rounded-xl p-7"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                transition={{
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 20,
-                  delay: 0.1,
-                }}
-                variants={cardVariants}
-              >
-                <div className="h-full w-full text-center">
-                  <h1 className="text-5xl font-bold my-4">Loan - Balance</h1>
-                  <BarCompareChart
-                    data={datas}
-                    category={["loan", "balance"]}
-                    xlabel="Balance"
-                    ylabel="Occupation"
-                    barLabel="Balance per Occupation"
-                    description="Average balance per occupation"
-                  />
-                </div>
-              </motion.article>
+              <div className="p-2">
+                <motion.article
+                  className="shadow-md border rounded-xl p-7"
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 20,
+                    delay: 0.1,
+                  }}
+                  variants={cardVariants}
+                >
+                  <div className="h-full w-full text-center">
+                    <h1 className="text-3xl font-bold my-4">
+                      Marital Status - Balance
+                    </h1>
+                    <BarCompareChart
+                      data={datas}
+                      category={["marital", "balance"]}
+                      xlabel="Marital Status"
+                      ylabel="Total Balance"
+                      barLabel="Balance per Marital Status"
+                      description="Average balance per marital status"
+                      avg={true}
+                    />
+                  </div>
+                </motion.article>
+              </div>
+              <div className="p-2">
+                <motion.article
+                  className="shadow-md border rounded-xl p-7"
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 20,
+                    delay: 0.1,
+                  }}
+                  variants={cardVariants}
+                >
+                  <div className="h-full w-full text-center">
+                    <h1 className="text-3xl font-bold my-4">
+                      Education Level - Balance
+                    </h1>
+                    <BarCompareChart
+                      data={datas}
+                      category={["education", "balance"]}
+                      xlabel="Education Level"
+                      ylabel="Total Balance"
+                      barLabel="Balance per Education Level"
+                      description="Average balance per education level"
+                      avg={true}
+                    />
+                  </div>
+                </motion.article>
+              </div>
             </section>
-          </section>
-
-          <section className="p-4 w-full">
-            <div className="flex w-full flex-grow space-x-4"></div>
           </section>
         </>
       )}

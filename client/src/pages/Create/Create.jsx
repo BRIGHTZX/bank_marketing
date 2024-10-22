@@ -55,16 +55,37 @@ const schema = z.object({
   }),
   pdays: z.preprocess(
     (val) => Number(val),
-    z.number().positive({ message: "pdays must be greater than 0" })
+    z.number({ message: "is required" })
   ),
+
   contact_type: z.string().min(1, { message: "Select Contact Type" }),
   duration: z.preprocess(
     (val) => Number(val),
-    z.number().positive({ message: "Duration must be greater than 0" })
+    z
+      .number()
+      .min(1, { message: "Last Contact Duration is required" })
+      .nonnegative({ message: "Last Contact Duration can't negative" })
   ),
-  campaign: z.preprocess((val) => Number(val), z.number().nonnegative()),
-  pcontact: z.preprocess((val) => Number(val), z.number().nonnegative()),
-  poutcome: z.preprocess((val) => Number(val), z.number().nonnegative()),
+  campaign: z.preprocess(
+    (val) => Number(val),
+    z
+      .number({ message: "required" })
+      .min(1, { message: "Campaign is required" })
+      .nonnegative({ message: "Campaign Contact can't negative" })
+  ),
+  pcontact: z.preprocess(
+    (val) => Number(val),
+    z
+      .number()
+      .min(1, { message: "Last Contact Day is required" })
+      .nonnegative({ message: "Previous Concacts can't negative" })
+  ),
+  poutcome: z.preprocess(
+    (val) => Number(val),
+    z.number().min(1, { message: "Last Contact Day is required" }).nonnegative({
+      message: "Previous Campaign can't negative",
+    })
+  ),
   deposit: z.enum(["true", "false"], {
     errorMap: () => ({ message: "Deposit is required" }),
   }),
@@ -86,6 +107,7 @@ function Create() {
       gender: "",
       marital: "",
       otherJob: "",
+      duration: 0,
       campaign: 0,
       pcontact: 0,
       poutcome: 0,
@@ -261,7 +283,7 @@ function Create() {
                       {...register("marital")}
                       type="radio"
                       name="marital"
-                      value="disvorced"
+                      value="divorced"
                       className="ml-2 mr-1"
                     />
                     Divorced
@@ -384,7 +406,7 @@ function Create() {
                           <p>
                             Housing ?{" "}
                             <span className="text-xs text-gray-500">
-                              has housing loan?
+                              has housing loan
                             </span>
                           </p>
                         </label>
@@ -419,7 +441,7 @@ function Create() {
                             Loan ?
                             <span className="text-xs text-gray-500">
                               {" "}
-                              has personal loan?
+                              has personal loan
                             </span>
                           </p>
                         </label>

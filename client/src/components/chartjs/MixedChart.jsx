@@ -21,7 +21,7 @@ ChartJS.register(
   Legend,
   BarElement,
   CategoryScale,
-  LogarithmicScale // ลงทะเบียนสเกล logarithmic
+  LogarithmicScale
 );
 
 const monthMap = {
@@ -39,41 +39,52 @@ const monthMap = {
   dec: "December",
 };
 
-const MixedChart = ({ data, category }) => {
+const MixedChart = ({
+  data,
+  category,
+  label,
+  xLabel,
+  yLeft,
+  yRight,
+  description,
+}) => {
   if (!Array.isArray(data) || data.length === 0) {
     return <p>No Data Available</p>;
   }
-
-  const eachMonthData = data.reduce((acc, current) => {
-    if (!category || category.length < 2) {
-      return acc;
-    }
-
-    const month = current[category[0]];
+  console.log(description);
+  const eachData = data.reduce((acc, current) => {
+    const key = current[category[0]];
     const balance = current[category[1]];
 
-    if (!acc[month]) {
-      acc[month] = { totalBalance: 0, count: 0 };
+    if (!acc[key]) {
+      acc[key] = { totalBalance: 0, count: 0 };
     }
 
-    acc[month].totalBalance += balance;
-    acc[month].count += 1;
+    acc[key].totalBalance += balance;
+    acc[key].count += 1;
 
     return acc;
   }, {});
 
-  let labels = Object.keys(eachMonthData);
-  const barData = labels.map((month) => eachMonthData[month]?.count || 0);
-  const lineData = labels.map(
-    (month) => eachMonthData[month]?.totalBalance || 0
-  );
-  labels = labels.map((month) => monthMap[month]);
+  let labels = Object.keys(eachData);
+  const barData = labels.map((key) => eachData[key]?.count || 0);
+  const lineData = labels.map((key) => {
+    if (category[0] === "age") {
+      return eachData[key].totalBalance / eachData[key].count || 0; // ค่าเฉลี่ยยอดเงิน
+    }
+    return eachData[key]?.totalBalance || 0; // ยอดเงินรวมถ้าเป็นเดือน
+  });
+
+  // แปลงเดือนเป็นชื่อเดือนถ้าหาก category[0] เป็น 'month'
+  if (category[0] === "month") {
+    labels = labels.map((month) => monthMap[month]);
+  }
 
   const chartData = {
     labels: labels,
     datasets: [
       {
-        label: "จำนวนในแต่ละเดือน",
+        label: label[0],
         data: barData,
         backgroundColor: "rgba(75, 192, 192, 0.5)",
         borderColor: "rgba(75, 192, 192, 1)",
@@ -82,7 +93,7 @@ const MixedChart = ({ data, category }) => {
         yAxisID: "y-bar",
       },
       {
-        label: "ยอดเงินในแต่ละเดือน",
+        label: label[1],
         data: lineData,
         borderColor: "rgba(255, 99, 132, 1)",
         backgroundColor: "rgba(255, 99, 132, 0.5)",
@@ -101,24 +112,36 @@ const MixedChart = ({ data, category }) => {
       },
       title: {
         display: true,
-        text: "Mixed Chart Example",
+        text: description,
       },
     },
     scales: {
       "y-line": {
-        // สำหรับ line
         beginAtZero: true,
         type: "linear",
         position: "left",
         grid: {
-          drawOnChartArea: false, // ไม่ให้แสดงกริดบนพื้นที่กราฟ
+          drawOnChartArea: false,
+        },
+        title: {
+          display: true,
+          text: yLeft,
         },
       },
       "y-bar": {
-        // สำหรับ bar
         beginAtZero: true,
         type: "linear",
         position: "right",
+        title: {
+          display: true,
+          text: yRight,
+        },
+      },
+      x: {
+        title: {
+          display: true,
+          text: xLabel,
+        },
       },
     },
   };

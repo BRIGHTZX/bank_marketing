@@ -8,7 +8,7 @@ export const getDatas = async (req, res, next) => {
     const sortDirection = req.query.sort === "asc" ? "ASC" : "DESC";
     const month = req.query.month;
     const limit = parseInt(req.query.limit) || 10;
-    let query = `SELECT b.id, b.age, b.job, b.marital, b.education, b.balance, b.housing, b.loan, b.day, b.month, c.name, c.email, c.gender
+    let query = `SELECT b.id, b.age, b.job, b.marital, b.education, b.balance, b.housing, b.loan, b.day, b.month, b.contact, b.campaign, b.y, c.name, c.email, c.gender
     FROM bank_info b
     JOIN bank_customer c ON b.id = c.bank_id`;
 

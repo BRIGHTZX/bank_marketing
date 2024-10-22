@@ -56,6 +56,7 @@ function Dashboard() {
   });
 
   const [datas, setDatas] = useState([]);
+  console.log(datas);
   const [totalUsers, setTotalUsers] = useState(null);
   const [totalBalance, setTotalBalance] = useState(null);
   const [rowsToShow, setRowsToShow] = useState(10);
@@ -168,11 +169,11 @@ function Dashboard() {
             transition={{ duration: 0.5 }}
             variants={sectionVariants}
           >
-            <h1 className="text-5xl font-bold ml-4">Dashboard</h1>
+            <h1 className="text-5xl font-bold ml-4 ">Dashboard</h1>
             <hr className="w-[95%] my-4 ml-5" />
           </motion.div>
           <div className="grid grid-cols-5 gap-1">
-            <section className="col-span-3 h-[180px] p-4">
+            <section className="col-span-3 p-4">
               <div className="grid grid-cols-2 gap-2">
                 {/* การ์ด Total Users */}
                 <motion.div
@@ -203,7 +204,7 @@ function Dashboard() {
                 >
                   <div className="flex items-center justify-between">
                     <h3 className="text-3xl font-bold">Total Balance</h3>
-                    <BsCashStack className="text-4xl mr-4" />
+                    <BsCashStack className="text-5xl mr-4" />
                   </div>
                   <p className="text-3xl font-bold mt-4">€ {totalBalance}</p>
                 </motion.div>
@@ -231,7 +232,6 @@ function Dashboard() {
                 </div>
               </motion.div>
 
-              {/* BarChart Age */}
               <motion.div
                 className="shadow-md border mt-4 rounded-xl bg-white p-2"
                 initial="hidden"
@@ -241,15 +241,46 @@ function Dashboard() {
                 variants={sectionVariants}
               >
                 <div className="h-full w-full text-center">
-                  <h1 className="text-5xl font-bold my-4">Monthly Overview</h1>
-                  <MixedChart data={datas} category={["month", "balance"]} />
+                  <h1 className="text-5xl font-bold my-4">
+                    Monthly Balance Overview
+                  </h1>
+                  <MixedChart
+                    data={datas}
+                    category={["month", "balance"]}
+                    label={["Total Count by Month", "Total Balance by Month"]}
+                    xLabel="Month"
+                    yLeft="Total Balance"
+                    yRight="Total Count"
+                    description="Monthly balance changes summary."
+                  />
+                </div>
+              </motion.div>
+
+              <motion.div
+                className="shadow-md border mt-4 rounded-xl bg-white p-2"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+                variants={sectionVariants}
+              >
+                <div className="h-full w-full text-center">
+                  <h1 className="text-5xl font-bold my-4">Campaign Contact</h1>
+                  <BarCompareChart
+                    data={datas}
+                    category={["contact", "campaign"]}
+                    xlabel="Contact Types"
+                    ylabel="Number of campaign"
+                    barLabel="Contact Type Campaign Summary"
+                    description="Total Campaigns associated with each contact."
+                  />
                 </div>
               </motion.div>
             </section>
 
-            <section className="col-span-2 grid grid-cols-2 pr-4">
+            <section className="col-span-2 pr-4">
               <motion.section
-                className="col-span-2 h-[180px] p-4"
+                className="h-[180px] pt-4"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
@@ -340,91 +371,116 @@ function Dashboard() {
                 </form>
               </motion.section>
 
-              {/* Marital Section */}
-              <motion.section
-                className="p-2 shadow-md border rounded-xl mr-4 bg-white"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                variants={sectionVariants}
-              >
-                <div className="h-full w-full text-center">
-                  <h1 className="text-5xl font-bold my-4">Marital</h1>
-                  <div className="h-3/4 flex items-center justify-center">
-                    <PieChart data={datas} category="marital" />
+              <div className="grid grid-cols-2">
+                {/* Marital Section */}
+                <motion.section
+                  className="p-2 shadow-md border rounded-xl mr-4 bg-white"
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                  variants={sectionVariants}
+                >
+                  <div className="h-full w-full text-center">
+                    <h1 className="text-5xl font-bold my-4">Contact</h1>
+                    <div className="h-3/4 flex items-center justify-center">
+                      <PieChart data={datas} category={"contact"} />
+                    </div>
                   </div>
-                </div>
-              </motion.section>
+                </motion.section>
 
-              {/* Housing Section */}
-              <motion.section
-                className="p-2 shadow-md border rounded-xl bg-white"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                variants={sectionVariants}
-              >
-                <div className="h-full w-full text-center">
-                  <h1 className="text-5xl font-bold my-4">Housing</h1>
-                  <div className="h-3/4 flex items-center justify-center">
-                    <PieChart data={datas} category="housing" />
+                {/* Housing Section */}
+                <motion.section
+                  className="p-2 shadow-md border rounded-xl bg-white"
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  variants={sectionVariants}
+                >
+                  <div className="h-full w-full text-center">
+                    <h1 className="text-5xl font-bold my-4">Term Deposit</h1>
+                    <div className="h-3/4 flex items-center justify-center">
+                      <PieChart data={datas} category="y" />
+                    </div>
                   </div>
-                </div>
-              </motion.section>
+                </motion.section>
 
-              <motion.section
-                className="col-span-2 p-2 shadow-md border rounded-xl mt-4 bg-white"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                variants={sectionVariants}
-              >
-                <div className="h-full w-full text-center">
-                  <h1 className="text-[33px] text-nowrap font-bold my-4">
-                    Average Balance by Occupation
-                  </h1>
-                  <BarCompareChart
-                    data={datas}
-                    category={["job", "balance"]}
-                    xlabel="Balance"
-                    ylabel="Occupation"
-                    barLabel="Balance per Occupation"
-                    description="Average balance per occupation"
-                    avg={true}
-                    option="horizontal"
-                  />
-                </div>
-              </motion.section>
+                <motion.section
+                  className="col-span-2 p-2 shadow-md border rounded-xl mt-4 bg-white"
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                  variants={sectionVariants}
+                >
+                  <div className="h-full w-full text-center">
+                    <h1 className="text-5xl text-nowrap font-bold my-4">
+                      Average Balance
+                    </h1>
+                    <p className="text-3xl font-bold">by Occupation</p>
+                    <BarCompareChart
+                      data={datas}
+                      category={["job", "balance"]}
+                      xlabel="Balance"
+                      ylabel="Occupation"
+                      barLabel="Balance per Occupation"
+                      description="Average balance per occupation"
+                      avg={true}
+                      option="horizontal"
+                    />
+                  </div>
+                </motion.section>
 
-              {/* Age - Balance LineChart */}
-              <motion.section
-                className="col-span-2 p-2 shadow-md border rounded-xl mt-4 bg-white"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.6 }}
-                variants={sectionVariants}
-              >
-                <div className="h-full w-full text-center">
-                  <h1 className="text-[33px] font-bold my-4">
-                    Average Balance by Age
-                  </h1>
-                  <LineChart
-                    data={datas}
-                    xlabel="Age"
-                    ylabel="Balance"
-                    barLabel="Average balance per age"
-                    description="Average balance per Age"
-                  />
-                </div>
-              </motion.section>
+                <motion.section
+                  className="col-span-2 p-2 shadow-md border rounded-xl mt-4 bg-white"
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.6 }}
+                  variants={sectionVariants}
+                >
+                  <div className="h-full w-full text-center">
+                    <h1 className="text-5xl font-bold my-4">Average Balance</h1>
+                    <p className="text-3xl font-bold">by Age</p>
+                    <LineChart
+                      data={datas}
+                      xlabel="Age"
+                      ylabel="Balance"
+                      barLabel="Average balance per age"
+                      description="Average balance per Age"
+                    />
+                  </div>
+                </motion.section>
+
+                <motion.section
+                  className="col-span-2 p-2 shadow-md border rounded-xl mt-4 bg-white"
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.6 }}
+                  variants={sectionVariants}
+                >
+                  <div className="h-full w-full text-center">
+                    <h1 className="text-5xl font-bold my-4">
+                      Monthly Campaign
+                    </h1>
+                    <p className="text-3xl font-bold">Overview</p>
+                    <BarCompareChart
+                      data={datas}
+                      category={["month", "campaign"]}
+                      xlabel="Month"
+                      ylabel="Number of Campaign"
+                      barLabel="Total Campaign per Month"
+                      description="Monthly Campaign Summary"
+                    />
+                  </div>
+                </motion.section>
+              </div>
             </section>
 
-            <motion.section
-              className="col-span-5 p-4"
+            <motion.div
+              className="p-4 col-span-5"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
@@ -520,7 +576,7 @@ function Dashboard() {
                   </table>
                 </div>
               </div>
-            </motion.section>
+            </motion.div>
           </div>
         </>
       )}
