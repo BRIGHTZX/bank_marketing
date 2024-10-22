@@ -142,7 +142,7 @@ function SignUp() {
       {/* Right */}
       <section className="w-1/2">
         <img
-          src="https://wallup.net/wp-content/uploads/2019/09/317501-nissan-skyline-r34-gt-r-car-hd-wallpaper-1920x1080-8791.jpg"
+          src="https://www.confiz.com/wp-content/uploads/2023/10/64c0cf00f6acd33ef5140738_BG.jpg-1.webp"
           alt=""
           className="w-full h-screen object-cover object-left"
         />
