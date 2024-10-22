@@ -173,11 +173,12 @@ function Create() {
             <div className="flex flex-col xl:flex-row gap-10 h-4/5 w-2/3  mx-auto  font-semibold">
               <section className="flex flex-1 flex-col gap-5 ">
                 <div>
-                  <label htmlFor="">
+                  <label htmlFor="firstname">
                     <p>Customer FirstName</p>
                   </label>
                   <input
                     {...register("firstname")}
+                    id="firstname"
                     type="text"
                     className="border w-full py-2 px-4 rounded-xl"
                   />
@@ -188,11 +189,12 @@ function Create() {
                   )}
                 </div>
                 <div>
-                  <label htmlFor="">
+                  <label htmlFor="lastname">
                     <p>Customer LastName</p>
                   </label>
                   <input
                     {...register("lastname")}
+                    id="lastname"
                     type="text"
                     className="border w-full py-2 px-4 rounded-xl"
                   />
@@ -203,11 +205,12 @@ function Create() {
                   )}
                 </div>
                 <div>
-                  <label htmlFor="">
+                  <label htmlFor="email">
                     <p>Customer Email</p>
                   </label>
                   <input
                     {...register("email")}
+                    id="email"
                     type="text"
                     className="border w-full py-2 px-4 rounded-xl"
                   />
@@ -218,9 +221,12 @@ function Create() {
                   )}
                 </div>
                 <div>
-                  <p>Balance</p>
+                  <label htmlFor="balance">
+                    <p>Balance</p>
+                  </label>
                   <input
                     {...register("balance")}
+                    id="balance"
                     type="number"
                     className="border w-full py-2 px-4 rounded-xl"
                   />
@@ -231,8 +237,8 @@ function Create() {
                   )}
                 </div>
                 <section className="flex">
-                  <div className="">
-                    <label htmlFor="">
+                  <div>
+                    <label>
                       <p>Gender</p>
                     </label>
                     <input
@@ -263,7 +269,7 @@ function Create() {
                   </div>
 
                   <div className="flex-1">
-                    <label htmlFor="">
+                    <label>
                       <p>Marital Status</p>
                     </label>
                     <input
@@ -304,6 +310,7 @@ function Create() {
                     </label>
                     <select
                       {...register("age")}
+                      id="age"
                       className="border w-40 p-1"
                       defaultValue={""}
                     >
@@ -407,8 +414,8 @@ function Create() {
                       <div className="my-3 flex-1">
                         <label htmlFor="">
                           <p>
-                            Housing ?{" "}
-                            <span className="text-xs text-gray-500">
+                            Housing ?
+                            <span className="text-xs block text-gray-500">
                               has housing loan
                             </span>
                           </p>
@@ -442,8 +449,7 @@ function Create() {
                         <label htmlFor="">
                           <p>
                             Loan ?
-                            <span className="text-xs text-gray-500">
-                              {" "}
+                            <span className="text-xs block text-gray-500">
                               has personal loan
                             </span>
                           </p>
@@ -475,7 +481,12 @@ function Create() {
                       </div>
                       <div className="my-3">
                         <label htmlFor="">
-                          <p>Has Creadit in default?</p>
+                          <p>
+                            Has Creadit in default ?
+                            <span className="text-xs block text-gray-500">
+                              customer with credit defaults.
+                            </span>
+                          </p>
                         </label>
                         <input
                           {...register("defaultCredit")}
@@ -504,7 +515,7 @@ function Create() {
                   {/* section1 */}
                   <section className="flex">
                     <div className="flex-1">
-                      <label htmlFor="">
+                      <label htmlFor="contact_type">
                         <p>Contact Type</p>
                       </label>
                       <select
@@ -531,16 +542,17 @@ function Create() {
                   <section>
                     <div>
                       <div className="mb-4">
-                        <label htmlFor="">
+                        <label htmlFor="pdays">
                           <p>Last Contact Days</p>
                         </label>
-                        <p className="text-xs">
+                        <p className="text-xs text-gray-500">
                           The last contact date, if not available, should be set
                           to -1.
                         </p>
                       </div>
                       <input
                         {...register("pdays")}
+                        id="pdays"
                         type="number"
                         className="border px-4 py-2 w-full"
                       />
@@ -556,15 +568,16 @@ function Create() {
                     <section className="flex flex-col flex-1 gap-5">
                       <div>
                         <div className="mb-4">
-                          <label htmlFor="">
+                          <label htmlFor="duration">
                             <p>Last Contact Duration</p>
                           </label>
-                          <p className="text-xs">
+                          <p className="text-xs text-gray-500">
                             The last contact duration (in seconds).
                           </p>
                         </div>
                         <input
                           {...register("duration")}
+                          id="duration"
                           type="number"
                           className="border px-4 py-2"
                         />
@@ -577,13 +590,14 @@ function Create() {
 
                       <div>
                         <div className="mb-4">
-                          <label htmlFor="">Previous Contacts</label>
-                          <p className="text-xs">
+                          <label htmlFor="pcontact">Previous Contacts</label>
+                          <p className="text-xs text-gray-500">
                             The number of contacts made before this campaign.
                           </p>
                         </div>
                         <input
                           {...register("pcontact")}
+                          id="pcontact"
                           type="number"
                           className="border px-4 py-2"
                         />
@@ -600,14 +614,15 @@ function Create() {
                     {/* section3 */}
                     <section className="flex flex-col flex-1 gap-5">
                       <div>
-                        <label htmlFor="">
+                        <label htmlFor="campaign">
                           <p>Campaign</p>
                         </label>
-                        <p className="text-xs mb-4">
+                        <p className="text-xs text-gray-500 mb-4">
                           The number of contacts made during this campaign.
                         </p>
                         <input
                           {...register("campaign")}
+                          id="campaign"
                           type="number"
                           className="border px-4 py-2"
                         />
@@ -619,19 +634,21 @@ function Create() {
                       </div>
                       <div>
                         <div className="mb-4">
-                          <label htmlFor="">Previous Campaign Outcome</label>
-                          <p className="text-xs">
+                          <label htmlFor="poutcome">
+                            Previous Campaign Outcome
+                          </label>
+                          <p className="text-xs text-gray-500 ">
                             The outcome of the previous marketing campaign.
                           </p>
                         </div>
 
                         <select
                           {...register("poutcome")}
-                          id="education"
+                          id="poutcome"
                           className="border px-4 py-2 w-60"
                           defaultValue=""
                         >
-                          <option value="" disabled>
+                          <option value="" disabled selected>
                             select outcome
                           </option>
                           <option value="success">success</option>
@@ -649,8 +666,10 @@ function Create() {
                   </div>
                 </div>
                 <div className="mt-4">
-                  <label htmlFor="">Term Deposit Subscription</label>
-                  <p>ลูกค้าได้สมัครฝากเงินประจำหรือไม่?</p>
+                  <label>Term Deposit Subscription</label>
+                  <p className="text-xs text-gray-500">
+                    Has the client subscribed to a term deposit?
+                  </p>
                   <input
                     {...register("deposit")}
                     type="radio"
