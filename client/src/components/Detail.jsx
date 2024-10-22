@@ -4,8 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { BsCashStack } from "react-icons/bs";
 import { FaUser } from "react-icons/fa";
 import PieChart from "./chartjs/PieChart";
-import LineChartPdays from "./chartjs/LineChartPdays";
-import LineChart from "./chartjs/LineChart";
 import BarChart from "./chartjs/BarChart";
 import { ClipLoader } from "react-spinners";
 import { motion } from "framer-motion";
@@ -35,7 +33,6 @@ function Detail() {
       try {
         setLoading(true);
         const searchQuery = urlParams.toString();
-        console.log(searchQuery);
         const res = await axios.get(`api/bank/getDetails?${searchQuery}`);
 
         if (res.status >= 200 && res.status < 300) {

@@ -56,12 +56,12 @@ function Dashboard() {
   });
 
   const [datas, setDatas] = useState([]);
-  console.log(datas);
   const [totalUsers, setTotalUsers] = useState(null);
   const [totalBalance, setTotalBalance] = useState(null);
   const [rowsToShow, setRowsToShow] = useState(10);
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filterLoading, setFilterLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -104,6 +104,7 @@ function Dashboard() {
         console.log(error);
       } finally {
         setLoading(false);
+        setFilterLoading(false);
       }
     };
 
@@ -132,7 +133,7 @@ function Dashboard() {
 
     // สร้าง URL ที่มี query string
     navigate(`/Dashboard?${searchQuery}`);
-    setLoading(false);
+    setFilterLoading(true);
   };
 
   const handleRowsChange = (event) => {
@@ -186,7 +187,7 @@ function Dashboard() {
                 >
                   <div className="flex items-center justify-between">
                     <h3 className="text-3xl font-bold">Total Customers</h3>
-                    <FaUser className="text-3xl mr-4" />
+                    <FaUser className="text-5xl mr-4" />
                   </div>
                   <p className="text-3xl mt-4 font-bold">
                     {totalUsers} <span className="text-xl">Customers</span>
@@ -337,7 +338,9 @@ function Dashboard() {
                           value={search.ageRange}
                           onChange={(e) => handleChange(e)}
                         >
-                          <option value="">Select Age Range</option>
+                          <option value="" selected disabled>
+                            Select Age Range
+                          </option>
                           {ageRanges.map((range) => (
                             <option key={range.value} value={range.value}>
                               {range.label}
@@ -366,7 +369,26 @@ function Dashboard() {
                     type="submit"
                     className="bg-black text-white rounded-lg hover:bg-black/80 py-1.5 px-4 font-bold w-full mt-2"
                   >
-                    Submit
+                    {filterLoading ? (
+                      <>
+                        <div className="flex justify-center items-center gap-5">
+                          <ClipLoader
+                            color="#fff"
+                            loading={filterLoading}
+                            size={15}
+                          />
+                          <motion.div
+                            animate={{ scale: [1, 1.1, 1] }}
+                            transition={{ duration: 0.6, repeat: Infinity }}
+                            className=""
+                          >
+                            Loading...
+                          </motion.div>
+                        </div>
+                      </>
+                    ) : (
+                      "Submit"
+                    )}
                   </button>
                 </form>
               </motion.section>

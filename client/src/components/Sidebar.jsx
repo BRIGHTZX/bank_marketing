@@ -51,7 +51,7 @@ export default function Sidebar() {
     <aside
       className={`z-10 ${
         expanded ? "w-56" : "w-16"
-      } transition-[width] duration-500`}
+      } transition-[width] duration-500 ease-out`}
     >
       <nav className="flex h-full flex-col border-r shadow-sm">
         <div className="p-4 pb-2 flex justify-between items-center">

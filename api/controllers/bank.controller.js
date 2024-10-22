@@ -87,7 +87,7 @@ export const getDetails = async (req, res, next) => {
   try {
     let label = req.query.label;
 
-    let query = `SELECT * FROM bank_info b JOIN bank_customer c ON b.id = c.bank_id`;
+    let query = `SELECT b.id, b.age, b.job, b.marital, b.education, b.balance, b.housing, b.loan, b.month, b.contact, b.campaign, b.y, c.gender FROM bank_info b JOIN bank_customer c ON b.id = c.bank_id`;
     let queryParams = [];
 
     if (label) {
@@ -152,8 +152,8 @@ export const createData = async (req, res, next) => {
   balance = Number(balance);
   duration = Number(duration);
   campaign = Number(campaign);
+  pdays = Number(pdays);
   pcontact = Number(pcontact);
-  poutcome = Number(poutcome);
 
   // ตรวจสอบค่าที่จำเป็น
   if (
@@ -177,10 +177,10 @@ export const createData = async (req, res, next) => {
     isNaN(duration) ||
     isNaN(campaign) ||
     isNaN(pcontact) ||
-    isNaN(poutcome) ||
+    !poutcome ||
     !deposit
   ) {
-    return next(errorHandler(400, "All fields are required"));
+    return next(errorHandler(400, "All field are required"));
   }
 
   const fullName = firstname + " " + lastname;

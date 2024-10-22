@@ -82,10 +82,7 @@ export const signin = async (req, res, next) => {
 
     const token = await jwt.sign(
       { id: User.id, isAdmin: User.isadmin },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "2h",
-      }
+      process.env.JWT_SECRET
     );
     const { password: pass, ...rest } = User;
 

@@ -51,7 +51,6 @@ const MixedChart = ({
   if (!Array.isArray(data) || data.length === 0) {
     return <p>No Data Available</p>;
   }
-  console.log(description);
   const eachData = data.reduce((acc, current) => {
     const key = current[category[0]];
     const balance = current[category[1]];

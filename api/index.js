@@ -3,8 +3,6 @@ import dotenv from "dotenv";
 import cookiePaser from "cookie-parser";
 import authRoutes from "./routes/auth.route.js";
 import bankRoutes from "./routes/bank.route.js";
-import userRoutes from "./routes/user.route.js";
-import cors from "cors";
 import path from "path";
 
 dotenv.config();
@@ -16,7 +14,6 @@ app.use(cookiePaser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/bank", bankRoutes);
-app.use("/api/user", userRoutes);
 
 app.listen(4000, () => {
   console.log("Server is running on port 4000!");

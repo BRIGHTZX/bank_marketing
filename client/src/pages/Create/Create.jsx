@@ -54,38 +54,37 @@ const schema = z.object({
     errorMap: () => ({ message: "credit is required" }),
   }),
   pdays: z.preprocess(
-    (val) => Number(val),
-    z.number({ message: "is required" })
+    (val) =>
+      val === undefined || val === null || val === "" ? undefined : Number(val),
+    z
+      .number({ message: "Last Contact Days is required" })
+      .min(-1, { message: "If there is no last contact date, set it to -1" })
   ),
-
   contact_type: z.string().min(1, { message: "Select Contact Type" }),
   duration: z.preprocess(
-    (val) => Number(val),
+    (val) =>
+      val === undefined || val === null || val === "" ? undefined : Number(val),
     z
-      .number()
-      .min(1, { message: "Last Contact Duration is required" })
+      .number({ message: "Last Contact Duration is required" })
       .nonnegative({ message: "Last Contact Duration can't negative" })
   ),
   campaign: z.preprocess(
-    (val) => Number(val),
+    (val) =>
+      val === undefined || val === null || val === "" ? undefined : Number(val),
     z
-      .number({ message: "required" })
-      .min(1, { message: "Campaign is required" })
-      .nonnegative({ message: "Campaign Contact can't negative" })
+      .number({ message: "Campaign is required" })
+      .positive({ message: "Campaign must be equal to 1 or greater." })
   ),
   pcontact: z.preprocess(
-    (val) => Number(val),
+    (val) =>
+      val === undefined || val === null || val === "" ? undefined : Number(val),
     z
-      .number()
-      .min(1, { message: "Last Contact Day is required" })
+      .number({ message: "Previous Concacts is required" })
       .nonnegative({ message: "Previous Concacts can't negative" })
   ),
-  poutcome: z.preprocess(
-    (val) => Number(val),
-    z.number().min(1, { message: "Last Contact Day is required" }).nonnegative({
-      message: "Previous Campaign can't negative",
-    })
-  ),
+  poutcome: z
+    .string()
+    .min(1, { message: "Previous Contact Outcome is required" }),
   deposit: z.enum(["true", "false"], {
     errorMap: () => ({ message: "Deposit is required" }),
   }),
@@ -108,9 +107,8 @@ function Create() {
       marital: "",
       otherJob: "",
       duration: 0,
-      campaign: 0,
+      campaign: 1,
       pcontact: 0,
-      poutcome: 0,
     },
     resolver: zodResolver(schema),
   });
@@ -131,7 +129,13 @@ function Create() {
 
   const onSubmit = async (formData) => {
     try {
-      console.log("Form submitted", formData); // ตรวจสอบข้อมูล
+      if (formData.pdays === -1 && formData.pcontact !== 0) {
+        setError("pcontact", {
+          message:
+            "If there are no last contact days, the previous value must be 0.",
+        });
+        return;
+      }
 
       const res = await axios.post("/api/bank/createData", formData, {
         headers: { "Content-Type": "application/json" },
@@ -144,7 +148,6 @@ function Create() {
       }
       reset();
     } catch (error) {
-      console.log(error);
       setError("submit", {
         type: "manual",
         message: "Failed to submit form",
@@ -531,7 +534,10 @@ function Create() {
                         <label htmlFor="">
                           <p>Last Contact Days</p>
                         </label>
-                        <p className="text-xs">วันที่การติดต่อครั้งล่าสุด</p>
+                        <p className="text-xs">
+                          The last contact date, if not available, should be set
+                          to -1.
+                        </p>
                       </div>
                       <input
                         {...register("pdays")}
@@ -554,7 +560,7 @@ function Create() {
                             <p>Last Contact Duration</p>
                           </label>
                           <p className="text-xs">
-                            ระยะเวลาการติดต่อครั้งล่าสุด (เป็นวินาที)
+                            The last contact duration (in seconds).
                           </p>
                         </div>
                         <input
@@ -570,10 +576,12 @@ function Create() {
                       </div>
 
                       <div>
-                        <label htmlFor="">Previous Contacts</label>
-                        <p className="text-xs">
-                          จำนวนการติดต่อที่ทำก่อนแคมเปญนี้
-                        </p>
+                        <div className="mb-4">
+                          <label htmlFor="">Previous Contacts</label>
+                          <p className="text-xs">
+                            The number of contacts made before this campaign.
+                          </p>
+                        </div>
                         <input
                           {...register("pcontact")}
                           type="number"
@@ -590,13 +598,13 @@ function Create() {
                       <hr className="border-r h-full mt-2 mx-2" />
                     </div>
                     {/* section3 */}
-                    <section className="flex flex-col flex-1 gap-3">
+                    <section className="flex flex-col flex-1 gap-5">
                       <div>
                         <label htmlFor="">
-                          <p>Campaign Contacts</p>
+                          <p>Campaign</p>
                         </label>
                         <p className="text-xs mb-4">
-                          จำนวนการติดต่อที่ทำในระหว่างแคมเปญนี้
+                          The number of contacts made during this campaign.
                         </p>
                         <input
                           {...register("campaign")}
@@ -610,15 +618,27 @@ function Create() {
                         )}
                       </div>
                       <div>
-                        <label htmlFor="">Previous Campaign Outcome</label>
-                        <p className="text-xs">
-                          ผลลัพธ์จากแคมเปญการตลาดก่อนหน้า
-                        </p>
-                        <input
+                        <div className="mb-4">
+                          <label htmlFor="">Previous Campaign Outcome</label>
+                          <p className="text-xs">
+                            The outcome of the previous marketing campaign.
+                          </p>
+                        </div>
+
+                        <select
                           {...register("poutcome")}
-                          type="number"
-                          className="border px-4 py-2"
-                        />
+                          id="education"
+                          className="border px-4 py-2 w-60"
+                          defaultValue=""
+                        >
+                          <option value="" disabled>
+                            select outcome
+                          </option>
+                          <option value="success">success</option>
+                          <option value="failure">failure</option>
+                          <option value="other">Other</option>
+                          <option value="unknown">Unknown</option>
+                        </select>
                         {errors.poutcome && (
                           <p className="text-xs text-red-500">
                             {errors.poutcome.message}
@@ -667,7 +687,9 @@ function Create() {
                 {isSubmitting ? "Loading..." : "Create"}
               </button>
             </div>
-            {errors && console.log("Validation Errors:", errors)}
+            {errors.submit && (
+              <p style={{ color: "red" }}>{errors.submit.message}</p>
+            )}
           </form>
         </main>
       </div>
