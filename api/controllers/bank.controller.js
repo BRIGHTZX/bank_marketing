@@ -42,11 +42,9 @@ export const getDatas = async (req, res, next) => {
         b.marital ILIKE $${queryParams.length + 2} OR
         b.education ILIKE $${queryParams.length + 3} OR
         c.name ILIKE $${queryParams.length + 4} OR
-        c.email ILIKE $${queryParams.length + 5} OR
-        c.gender ILIKE $${queryParams.length + 6}
+        c.email ILIKE $${queryParams.length + 5} 
       )`;
       queryParams.push(
-        searchTerm,
         searchTerm,
         searchTerm,
         searchTerm,
