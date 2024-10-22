@@ -115,6 +115,9 @@ export const getDetails = async (req, res, next) => {
 };
 
 export const createData = async (req, res, next) => {
+  if (!req.user.isAdmin) {
+    return next(errorHandler(403, "You are not allowed to create a post"));
+  }
   let {
     firstname,
     lastname,
