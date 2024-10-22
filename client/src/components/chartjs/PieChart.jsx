@@ -31,7 +31,7 @@ function PieChart({ data, category }) {
     labels: labels,
     datasets: [
       {
-        label: "จำนวนคน ",
+        label: "Number of people ",
         data: dataset,
         backgroundColor: labels.map(
           (_, index) => backgroundColors[index % backgroundColors.length]

@@ -367,11 +367,17 @@ function Dashboard() {
 
                   <button
                     type="submit"
-                    className="bg-black text-white rounded-lg hover:bg-black/80 py-1.5 px-4 font-bold w-full mt-2"
+                    className={`bg-black text-white rounded-lg ${
+                      filterLoading
+                        ? "pointer-events-none"
+                        : "hover:bg-black/80 "
+                    } py-1.5 px-4 font-bold w-full mt-2`}
                   >
                     {filterLoading ? (
                       <>
-                        <div className="flex justify-center items-center gap-5">
+                        <div
+                          className={`flex justify-center items-center gap-5 `}
+                        >
                           <ClipLoader
                             color="#fff"
                             loading={filterLoading}
@@ -380,7 +386,6 @@ function Dashboard() {
                           <motion.div
                             animate={{ scale: [1, 1.1, 1] }}
                             transition={{ duration: 0.6, repeat: Infinity }}
-                            className=""
                           >
                             Loading...
                           </motion.div>
@@ -535,12 +540,12 @@ function Dashboard() {
                   <table className="min-w-full border border-gray-300 bg-white">
                     <thead className="bg-gray-100">
                       <tr>
-                        <th className="px-4 py-2 border-b">Bank_ID</th>
+                        <th className="px-4 py-2 border-b">Bank ID</th>
                         <th className="px-4 py-2 border-b">Name</th>
                         <th className="px-4 py-2 border-b">Email</th>
                         <th className="px-4 py-2 border-b">Gender</th>
                         <th className="px-4 py-2 border-b">Age</th>
-                        <th className="px-4 py-2 border-b">Job</th>
+                        <th className="px-4 py-2 border-b">Occupation</th>
                         <th className="px-4 py-2 border-b">Marital</th>
                         <th className="px-4 py-2 border-b">Education</th>
                         <th className="px-4 py-2 border-b">Balance</th>
