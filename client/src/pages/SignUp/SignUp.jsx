@@ -123,14 +123,14 @@ function SignUp() {
               <div className="mt-4 text-right font-semibold">
                 <p>
                   Do You Have an Account?{" "}
-                  <span className="text-blue-700">
+                  <span className="text-blue-700 hover:underline">
                     <Link to={`/`}>Log In</Link>
                   </span>
                 </p>
               </div>
               <div>
                 {errors.root && (
-                  <div className="text-red-500 text-sm">
+                  <div className="text-white text-center font-bold bg-red-500 py-2 px-4 rounded-xl mt-4">
                     {errors.root.message}
                   </div>
                 )}
