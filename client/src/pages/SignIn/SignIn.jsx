@@ -110,7 +110,7 @@ function SignIn() {
                   <p>
                     Don&apos;t have an account?{" "}
                     <span className="text-blue-700">
-                      <Link to={`/register`}>Register here.</Link>
+                      <Link to={`/signup`}>Register here.</Link>
                     </span>
                   </p>
                 </div>
