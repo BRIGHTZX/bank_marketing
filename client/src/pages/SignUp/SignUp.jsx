@@ -144,7 +144,7 @@ function SignUp() {
         <img
           src="https://www.confiz.com/wp-content/uploads/2023/10/64c0cf00f6acd33ef5140738_BG.jpg-1.webp"
           alt=""
-          className="w-full h-screen object-cover object-left"
+          className="w-full h-screen object-cover"
         />
       </section>
     </div>
