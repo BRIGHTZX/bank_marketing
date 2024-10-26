@@ -122,7 +122,7 @@ function SignUp() {
               </button>
               <div className="mt-4 text-right font-semibold">
                 <p>
-                  Are You Have any Account ?{" "}
+                  Do You Have an Account?{" "}
                   <span className="text-blue-700">
                     <Link to={`/`}>Log In</Link>
                   </span>

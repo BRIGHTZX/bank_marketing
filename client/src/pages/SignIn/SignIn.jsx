@@ -108,9 +108,9 @@ function SignIn() {
                 </button>
                 <div className="mt-4 text-right font-semibold">
                   <p>
-                    Are You Have any Account ?{" "}
+                    Don&apos;t have an account?{" "}
                     <span className="text-blue-700">
-                      <Link to={`/signup`}>Register</Link>
+                      <Link to={`/register`}>Register here.</Link>
                     </span>
                   </p>
                 </div>
