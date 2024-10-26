@@ -102,7 +102,7 @@ export const getDetails = async (req, res, next) => {
     const bankDatas = fullResult.rows; // ข้อมูลทั้งหมด
 
     res.status(200).json({
-      message: "ok",
+      message: "get data successfully",
       totalDatas: totalDatas,
       bankDatas: bankDatas,
       label: label,

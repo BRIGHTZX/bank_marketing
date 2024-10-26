@@ -29,7 +29,6 @@ export default function Sidebar() {
   }, [location.search]);
 
   const handleSignout = async () => {
-    console.log("object");
     try {
       const res = await axios.post("/api/auth/signout");
       const data = res.data;
