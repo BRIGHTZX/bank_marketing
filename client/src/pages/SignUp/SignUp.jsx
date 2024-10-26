@@ -106,7 +106,7 @@ function SignUp() {
                 </label>
                 <input
                   {...register("password")}
-                  type="text"
+                  type="password"
                   className="border border-gray-300 w-full h-10 rounded-full mt-4 py-2 px-6"
                 />
                 {errors.password && (
