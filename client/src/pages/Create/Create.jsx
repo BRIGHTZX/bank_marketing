@@ -165,7 +165,7 @@ function Create() {
             className="w-full flex flex-col h-full"
           >
             <h1 className="text-5xl font-bold font-serif text-center mt-10">
-              Add Infomation
+              Add Information
             </h1>
             <div className="w-full">
               <hr className="my-10 w-2/3 mx-auto" />
