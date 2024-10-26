@@ -63,8 +63,10 @@ function SignUp() {
           <form onSubmit={handleSubmit(onSubmit)} className="p-10">
             <div>
               <h1 className="text-5xl font-bold mb-4">Register</h1>
-              <p className="text-gray-500 font-semibold">
-                How do i got started lorem ipsum clear at?{" "}
+              <p className="text-gray-500 font-semibold text-xs">
+                Sign up to create an account and start your journey with us.
+                Fill in the necessary information to set up your account and
+                gain immediate access to our features.
               </p>
             </div>
             <div className="mt-10">

@@ -64,8 +64,10 @@ function SignIn() {
             <div className="p-10">
               <div>
                 <h1 className="text-5xl font-bold mb-4">Log In</h1>
-                <p className="text-gray-500 font-semibold">
-                  How do i got started lorem ipsum clear at?{" "}
+                <p className="text-gray-500 font-semibold text-xs">
+                  Please log in with your account credentials to access our
+                  features. If you encounter any issues logging in, please
+                  contact support.
                 </p>
               </div>
               <div className="mt-10">
