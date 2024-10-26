@@ -80,7 +80,7 @@ export default function Sidebar() {
                   <Link to="/Create">
                     <SidebarItem
                       icon={<BsFilePost />}
-                      text="Add"
+                      text="Add Information"
                       active={tab == "posts"}
                     />
                   </Link>
@@ -118,7 +118,7 @@ export function SidebarItem({ icon, text, active, ...props }) {
     >
       {icon}
       <span
-        className={`flex overflow-hidden transition-all ${
+        className={`flex overflow-hidden transition-all text-nowrap ${
           expanded ? "ml-3" : "w-0"
         }`}
       >
@@ -127,7 +127,7 @@ export function SidebarItem({ icon, text, active, ...props }) {
       {!expanded && (
         <div
           className={`
-      absolute left-full rounded-md px-2 py-1 ml-6 
+      absolute left-full rounded-md px-2 py-1 ml-6 text-nowrap
       bg-black text-white text-sm 
       opacity-0 -translate-x-3 transition-all
       group-hover:opacity-100 group-hover:translate-x-0
