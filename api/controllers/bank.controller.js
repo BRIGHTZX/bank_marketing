@@ -36,15 +36,18 @@ export const getDatas = async (req, res, next) => {
 
     if (req.query.searchTerm && req.query.searchTerm.trim()) {
       const searchTerm = `%${req.query.searchTerm}%`;
+      console.log(searchTerm);
       query += queryParams.length > 0 ? ` AND` : ` WHERE`;
       query += ` (
         b.job ILIKE $${queryParams.length + 1} OR
         b.marital ILIKE $${queryParams.length + 2} OR
         b.education ILIKE $${queryParams.length + 3} OR
-        c.name ILIKE $${queryParams.length + 4} OR
-        c.email ILIKE $${queryParams.length + 5} 
+        b.contact ILIKE $${queryParams.length + 4} OR
+        c.name ILIKE $${queryParams.length + 5} OR
+        c.email ILIKE $${queryParams.length + 6} 
       )`;
       queryParams.push(
+        searchTerm,
         searchTerm,
         searchTerm,
         searchTerm,
