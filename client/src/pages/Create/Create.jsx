@@ -707,7 +707,9 @@ function Create() {
               </button>
             </div>
             {errors.submit && (
-              <p style={{ color: "red" }}>{errors.submit.message}</p>
+              <div className="text-white text-center font-bold bg-red-500 py-2 px-4 rounded-xl mt-4">
+                <p style={{ color: "red" }}>{errors.submit.message}</p>
+              </div>
             )}
           </form>
         </main>
